@@ -19,7 +19,7 @@ class Client {
 
   Future<void> newStore() async {
     var store = await stub.newStore(NewStoreRequest());
-    print('New store: $store');
+    print('New store $store');
   }
 
   // @todo: Add each of the required methods
