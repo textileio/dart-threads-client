@@ -1,0 +1,14 @@
+name: threads
+description: Dart gRPC client sample
+homepage: https://github.com/dart-lang/grpc-dart
+
+environment:
+  sdk: '>=2.2.0 <3.0.0'
+
+dependencies:
+  async: ^2.2.0
+  grpc: ^2.1.3
+  protobuf: ^1.0.1
+
+dev_dependencies:
+  test: ^1.6.4
