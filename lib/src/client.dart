@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:grpc/grpc.dart';
+import 'package:threads/src/generated/api.pb.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
 import 'generated/api.pbgrpc.dart';
@@ -35,8 +36,10 @@ class Client {
     return;
   }
 
-  Future<void> start() async {
-    await stub.start(StartRequest());
+  Future<void> start(String storeID) async {
+    var request = StartRequest();
+    request.storeID = storeID;
+    await stub.start(request);
     return;
   }
 
@@ -55,11 +58,24 @@ class Client {
     return;
   }
 
+  Future<Map<String, dynamic>> getStoreLink(String storeID) async {
+    var request = GetStoreLinkRequest();
+    request.storeID = storeID;
+    var response = await stub.getStoreLink(request);
+    // @todo: improve response type
+    return response.writeToJsonMap();
+  }
+
   // @todo: Add each of the required methods
-  // @todo: getStoreLink
   // @todo: modelCreate
   // @todo: modelSave
-  // @todo: see api.pbgrpc.dart for full list.
+  // @todo: modelDelete
+  // @todo: modelHas
+  // @todo: modelFind
+  // @todo: modelFindByID
+  // @todo: readTransaction
+  // @todo: writeTransaction
+  // @todo: listen
 
   Future<void> shutdown() async {
     await channel.shutdown();
