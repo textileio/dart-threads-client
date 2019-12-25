@@ -37,6 +37,8 @@ main() {
   String address;
   String followKey;
   String readKey;
+  String modelID;
+  int newAge = 42;
   setUp(() {
     client = new Client();
     client.main(null);
@@ -71,12 +73,9 @@ main() {
     expect(link.containsKey("1"), true);
     expect(link.containsKey("2"), true);
     expect(link.containsKey("3"), true);
-    print(link);
     address = link["1"][0].toString();
     followKey = link["2"].toString();
-    print(followKey);
     readKey = link["3"].toString();
-    print(readKey);
   });
   test("start from address", () async {
     try {
@@ -87,13 +86,92 @@ main() {
       expect(error.toString(), "");
     }
   });
-  test("create model", () async {
+  test("model create", () async {
+    var model = createPerson();
     try {
-      await client.startFromAddress(storeID: store, address: address, followKey: followKey, readKey: readKey);
+      List<Map<String, dynamic>> response = await client.modelCreate(store, 'Person', [model.toJson()]);
+      expect(response.length, 1);
+      final output = Person.fromJson(response[0]);
+      modelID = output.ID;
       expect(true, true);
     } catch (error) {
       // fail if error
       expect(error.toString(), "");
     }
   });
+  test("model save", () async {
+    var model = createPerson(ID: modelID, age: newAge);
+    try {
+      await client.modelSave(store, 'Person', [model.toJson()]);
+      expect(true, true);
+    } catch (error) {
+      // fail if error
+      expect(error.toString(), "");
+    }
+  });
+  test("model has", () async {
+    try {
+      final response = await client.modelHas(store, 'Person', [modelID]);
+      expect(response, true);
+    } catch (error) {
+      // fail if error
+      expect(error.toString(), "");
+    }
+  });
+
+  test("model find by ID", () async {
+    try {
+      final response = await client.modelFindById(store, 'Person', modelID);
+      final person = Person.fromJson(response);
+      expect(person.age, newAge);
+    } catch (error) {
+      // fail if error
+      expect(error.toString(), "");
+    }
+  });
+
+  // test("model find", () async {
+  //   try {
+  //     Map<String, dynamic> queryJSON = {
+  //       'ands': [
+  //         {
+  //           'fieldPath': 'firstName',
+  //           'operation': 'eq',
+  //           'value': { 'string': 'Adam' }
+  //         }
+  //       ]
+  //     };
+  //     await client.modelFind(store, 'Person', queryJSON);
+  //     // final person = Person.fromJson(response);
+  //     // expect(person.age, newAge);
+  //   } catch (error) {
+  //     // fail if error
+  //     expect(error.toString(), "");
+  //   }
+  // });
+}
+
+class Person {
+  final String ID;
+  final String firstName;
+  final String lastName;
+  final int age;
+  Person(this.ID, this.firstName, this.lastName, this.age);
+  Person.fromJson(Map<String, dynamic> json)
+      : ID = json['ID'],
+        firstName = json['firstName'],
+        lastName = json['lastName'],
+        age = json['age'];
+
+  Map<String, dynamic> toJson() =>
+    {
+      'ID': ID,
+      'firstName': firstName,
+      'lastName': lastName,
+      'age': age
+    };
+}
+
+Person createPerson ({String ID = '', int age = 24}) {
+  return Person(ID, 'Adam', 'Doe', age);
 }
