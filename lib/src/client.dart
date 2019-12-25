@@ -42,15 +42,17 @@ class Client {
 
   Future<void> startFromAddress({String storeID, String address, String followKey, String readKey}) async {
     var request = StartFromAddressRequest();  
-    request.storeID = storeID;
-    request.address = address;
+    if (storeID != null) {
+      request.storeID = storeID;
+    }
+    if (address != null) {
+      request.address = address;
+    }
     if (followKey != null) {
-      var encoded = Utf8Codec().encode(followKey);
-      request.followKey = encoded;
+      request.followKey = base64.decode(followKey);
     }
     if (readKey != null) {
-      var encoded = Utf8Codec().encode(readKey);
-      request.readKey = encoded;
+      request.readKey = base64.decode(readKey);
     }
     await stub.startFromAddress(request);
     return;

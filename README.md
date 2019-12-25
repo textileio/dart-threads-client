@@ -24,7 +24,18 @@ In a second terminal window, run the dart client example
 git clone git@github.com:textileio/dart-threads-client.git
 cd dart-threads-client
 pub get
-dart bin/client.dart
+```
+
+#### Run tests
+
+```sh
+dart test/client_test.dart
+```
+
+#### Run example
+
+```sh
+dart bin/example.dart
 ```
 
 If successfully setup, you should see `New store ID: <new id>`
