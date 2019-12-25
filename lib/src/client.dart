@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:grpc/grpc.dart';
-import 'package:threads/src/generated/api.pb.dart';
-import 'package:threads_client/src/generated/api.pb.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
 import 'generated/api.pbgrpc.dart';
 import 'generated/api.pb.dart';
