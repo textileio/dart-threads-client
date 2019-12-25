@@ -1,4 +1,4 @@
-## @textile/dart-threads-client example
+## threads_client
 
 ### Credit
 
