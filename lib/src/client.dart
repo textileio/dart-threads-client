@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:grpc/grpc.dart';
+import 'package:threads_client/src/generated/api.pb.dart';
+import 'package:threads_client/src/generated/api.pb.dart';
 import 'generated/api.pbgrpc.dart';
 import 'generated/api.pb.dart';
 
@@ -17,15 +21,41 @@ class Client {
         options: CallOptions(timeout: Duration(seconds: 30)));
   }
 
-  Future<void> newStore() async {
+  Future<String> newStore() async {
     var store = await stub.newStore(NewStoreRequest());
-    print('New store $store');
+    return store.getField(1);
+  }
+
+  Future<void> registerSchema({String storeID, String name, String schema}) async {
+    var request = RegisterSchemaRequest();  
+    request.storeID = storeID;
+    request.name = name;
+    request.schema = schema;
+    await stub.registerSchema(request);
+    return;
+  }
+
+  Future<void> start() async {
+    await stub.start(StartRequest());
+    return;
+  }
+
+  Future<void> startFromAddress({String storeID, String address, String followKey, String readKey}) async {
+    var request = StartFromAddressRequest();  
+    request.storeID = storeID;
+    request.address = address;
+    if (followKey != null) {
+      var encoded = Utf8Codec().encode(followKey);
+      request.followKey = encoded;
+    }
+    if (readKey != null) {
+      var encoded = Utf8Codec().encode(readKey);
+      request.readKey = encoded;
+    }
+    return;
   }
 
   // @todo: Add each of the required methods
-  // @todo: registerSchema
-  // @todo: start
-  // @todo: startFromAddress
   // @todo: getStoreLink
   // @todo: modelCreate
   // @todo: modelSave
