@@ -52,6 +52,7 @@ class Client {
       var encoded = Utf8Codec().encode(readKey);
       request.readKey = encoded;
     }
+    await stub.startFromAddress(request);
     return;
   }
 
