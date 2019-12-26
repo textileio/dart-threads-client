@@ -110,7 +110,7 @@ Copy those files into, `dart-threads-client/lib/src/generated/`.
 This project is a work in progress. As such, there's a few things you can do right now to help out:
 
 -   **Ask questions**! We'll try to help. Be sure to drop a note (on the above issue) if there is anything you'd like to work on and we'll update the issue to let others know. Also [get in touch](https://slack.textile.io) on Slack.
--   **Open issues**, [file issues](https://github.com/textileio/js-threads-client/issues), submit pull requests!
+-   **Open issues**, [file issues](https://github.com/textileio/dart-threads-client/issues), submit pull requests!
 -   **Perform code reviews**. More eyes will help a) speed the project along b) ensure quality and c) reduce possible future bugs.
 -   **Take a look at the code**. Contributions here that would be most helpful are **top-level comments** about how it should look based on your understanding. Again, the more eyes the better.
 -   **Add tests**. There can never be enough tests.
