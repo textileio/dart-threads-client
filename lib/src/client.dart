@@ -1,39 +1,32 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:protobuf/protobuf.dart';
 import 'package:uuid/uuid.dart';
 import 'package:grpc/grpc.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
 import 'generated/api.pbgrpc.dart';
 import 'models.dart';
 import 'utils.dart';
+import 'defaults.dart';
 
 class ThreadsClient {
+  Uuid uuid;
+
   ClientChannel channel;
   APIClient stub;
-  Uuid uuid = Uuid();
-  String host = '127.0.0.1';
-  int port = 6006;
+  String host;
+  int port;
 
-  ThreadsClient({String host = '127.0.0.1', int port = 6006}) {
+  ThreadsClient({String host = '127.0.0.1', int port = 6006, Duration timeout = default_timeout, ChannelCredentials credentials = default_credentials}) {
+    uuid = Uuid();
     host = host;
     port = port;
     channel = ClientChannel(host,
         port: port,
         options:
-            const ChannelOptions(credentials: ChannelCredentials.insecure()));
+            const ChannelOptions(credentials: default_credentials));
     stub = APIClient(channel,
-        options: CallOptions(timeout: Duration(seconds: 30)));
+        options: CallOptions(timeout: timeout));
   }
-  // Future<void> main(List<String> args) async {
-  //   // @todo use args for non-default ip/port/timeout
-  //   channel = ClientChannel(host,
-  //       port: port,
-  //       options:
-  //           const ChannelOptions(credentials: ChannelCredentials.insecure()));
-  //   stub = APIClient(channel,
-  //       options: CallOptions(timeout: Duration(seconds: 30)));
-  // }
 
   Future<String> newStore() async {
     var store = await stub.newStore(NewStoreRequest());
@@ -74,12 +67,16 @@ class ThreadsClient {
     return;
   }
 
-  Future<Map<String, dynamic>> getStoreLink(String storeID) async {
+  Future<StoreLinks> getStoreLink(String storeID) async {
     var request = GetStoreLinkRequest();
     request.storeID = storeID;
-    var response = await stub.getStoreLink(request);
-    // @todo: improve response type
-    return response.writeToJsonMap();
+    var output = await stub.getStoreLink(request);
+    var response = StoreLinks(
+      output.addresses,
+      base64.encode(output.followKey),
+      base64.encode(output.readKey)
+    );
+    return response;
   }
 
   Future<List<Map<String, dynamic>>> modelCreate(String storeID, String modelName, List<Map<String, dynamic>> values) async {
@@ -129,7 +126,6 @@ class ThreadsClient {
     final response = await stub.modelHas(request);
     return response.getField(1);
   }
-
 
   Future<Map<String, dynamic>> modelFindById(String storeID, String modelName, String entityID) async {
     var request = ModelFindByIDRequest();  

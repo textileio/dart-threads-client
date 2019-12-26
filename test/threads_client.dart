@@ -59,19 +59,16 @@ main() {
   });
   test("Get a link to invite others to the store", () async {
     var link = await client.getStoreLink(store);
-    expect(link.containsKey("1"), true);
-    expect(link.containsKey("2"), true);
-    expect(link.containsKey("3"), true);
-    address = link["1"][0].toString();
-    followKey = link["2"].toString();
-    readKey = link["3"].toString();
+    expect(link.addresses.length, greaterThan(0));
+    address = link.addresses[0];
+    followKey = link.followKey;
+    readKey = link.readKey;
   });
   test("Verify invite by starting from invite address", () async {
     try {
       await client.startFromAddress(storeID: store, address: address, followKey: followKey, readKey: readKey);
       expect(true, true);
     } catch (error) {
-      // fail if error
       expect(error.toString(), "");
     }
   });
@@ -84,7 +81,6 @@ main() {
       modelID = output.ID;
       expect(true, true);
     } catch (error) {
-      // fail if error
       expect(error.toString(), "");
     }
   });
@@ -94,7 +90,6 @@ main() {
       await client.modelSave(store, 'Person', [model.toJson()]);
       expect(true, true);
     } catch (error) {
-      // fail if error
       expect(error.toString(), "");
     }
   });

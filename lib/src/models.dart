@@ -1,6 +1,27 @@
 
 import 'dart:ffi';
 
+class StoreLinks {
+  final List<String> addresses;
+  final String followKey;
+  final String readKey;
+  StoreLinks._(this.addresses, this.followKey, this.readKey);
+  factory StoreLinks(List<String> addresses, String followKey, String readKey) {
+    return new StoreLinks._(addresses, followKey, readKey);
+  }
+  StoreLinks.fromJson(Map<String, dynamic> values)
+    : addresses = values['addresses'] as List<String>,
+      followKey = values['followKey'] as String,
+      readKey = values['readKey'] as String;
+
+  Map<String, dynamic> toJson() =>
+  {
+    'addresses': addresses,
+    'followKey': followKey,
+    'readKey': readKey
+  };
+}
+
 class ListenResult {
   String modelName;
   String entityID;
