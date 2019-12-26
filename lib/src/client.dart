@@ -85,11 +85,11 @@ class ThreadsClient {
     request.modelName = modelName;
     for (var i=0; i<values.length; i++) {
       values[i]["ID"] = uuid.v4();
-      var valString = JsonCodec().encode(values[i]).toString();
+      var valString = json.encode(values[i]).toString();
       request.values.add(valString);
     }
     var response = await stub.modelCreate(request);
-    List<dynamic> jsn = response.getField(1).map((f) => JsonCodec().decode(f.toString())).toList();
+    List<dynamic> jsn = response.getField(1).map((f) => json.decode(f.toString())).toList();
     return jsn.map((j) => j as Map<String, dynamic>).toList();
   }
 
@@ -98,7 +98,7 @@ class ThreadsClient {
     request.storeID = storeID;
     request.modelName = modelName;
     for (var i=0; i<values.length; i++) {
-      var valString = JsonCodec().encode(values[i]).toString();
+      var valString = json.encode(values[i]).toString();
       request.values.add(valString);
     }
     await stub.modelSave(request);
@@ -133,20 +133,20 @@ class ThreadsClient {
     request.modelName = modelName;
     request.entityID = entityID;
     var response = await stub.modelFindByID(request);
-    return JsonCodec().decode(response.getField(1));
+    return json.decode(response.getField(1));
   }
 
   Future<List<Map<String, dynamic>>> modelFind(String storeID, String modelName, JSONQuery query) async {
     var request = ModelFindRequest();  
     request.storeID = storeID;
     request.modelName = modelName;
-    request.queryJSON = utf8.encode(JsonCodec().encode(query.toJson()));
+    request.queryJSON = utf8.encode(json.encode(query.toJson()));
     var response = await stub.modelFind(request);
     var entities = response.getField(1);
     List<Map<String, dynamic>> fin = [];
     for (var i=0; i<entities.length; i++) {
       fin.add(
-        JsonCodec().decode(utf8.decode(entities[i])) as Map<String, dynamic>
+        json.decode(utf8.decode(entities[i])) as Map<String, dynamic>
       );
     }
     return fin;
@@ -180,6 +180,7 @@ class ThreadsClient {
     return writer;
   }
 
+  // @todo: wip
   Stream<WriteTransactionRequest> writeTransaction() {
     // @todo: needs test still;
     final controller = StreamController<WriteTransactionRequest>();

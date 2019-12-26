@@ -27,7 +27,7 @@ class ListenResult {
   String entityID;
   String action;
   Map<String, dynamic> entity;
-  ListenResult(modelName, entityID, action, entity);
+  ListenResult(this.modelName, this.entityID, this.action, this.entity);
   ListenResult.fromJson(Map<String, dynamic> values)
     : modelName = values['modelName'] as String,
       entityID = values['entityID'] as String,
