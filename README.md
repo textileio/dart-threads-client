@@ -25,7 +25,7 @@ In the `pubspec.yaml` of your project, add the following dependency:
 ```
 dependencies:
   ...
-  threads_client: "^0.0.5"
+  threads_client: "^0.1.0"
 ```
 
 ### Run Threads Daemon
