@@ -31,7 +31,7 @@ const personSchema = {
 };
 
 main() {
-  Client client;
+  ThreadsClient client;
   String store;
   String address;
   String followKey;
@@ -39,24 +39,25 @@ main() {
   String modelID;
   int newAge = 42;
   setUp(() {
-    client = new Client();
-    client.main(null);
+    // Create a new threads client
+    client = new ThreadsClient();
   });
   tearDown(() async {
+    // Shutdown the threads client.
     await client.shutdown();
   });
-  test("create & start store", () async {
+  test("Create & start a new data store", () async {
     store = await client.newStore();
     await client.start(store);
     expect(store.length, 36);
   });
-  test("register schema", () async {
+  test("Register a schema for the new store", () async {
     var jsonData = JsonCodec().encode(personSchema);
     var jsonString = jsonData.toString();
     await client.registerSchema(storeID: store, name: 'Person', schema: jsonString);
     expect(true, true);
   });
-  test("get store link", () async {
+  test("Get a link to invite others to the store", () async {
     var link = await client.getStoreLink(store);
     expect(link.containsKey("1"), true);
     expect(link.containsKey("2"), true);
@@ -65,7 +66,7 @@ main() {
     followKey = link["2"].toString();
     readKey = link["3"].toString();
   });
-  test("start from address", () async {
+  test("Verify invite by starting from invite address", () async {
     try {
       await client.startFromAddress(storeID: store, address: address, followKey: followKey, readKey: readKey);
       expect(true, true);
@@ -74,7 +75,7 @@ main() {
       expect(error.toString(), "");
     }
   });
-  test("model create", () async {
+  test("Create a new model in the store", () async {
     var model = createPerson();
     try {
       List<Map<String, dynamic>> response = await client.modelCreate(store, 'Person', [model.toJson()]);
@@ -87,7 +88,7 @@ main() {
       expect(error.toString(), "");
     }
   });
-  test("model save", () async {
+  test("Update an existing model in the store", () async {
     var model = createPerson(ID: modelID, age: newAge);
     try {
       await client.modelSave(store, 'Person', [model.toJson()]);
@@ -97,7 +98,7 @@ main() {
       expect(error.toString(), "");
     }
   });
-  test("model has", () async {
+  test("Check if an ID exists in the store", () async {
     try {
       final response = await client.modelHas(store, 'Person', [modelID]);
       expect(response, true);
@@ -107,7 +108,7 @@ main() {
     }
   });
 
-  test("model find by ID", () async {
+  test("Fetch a model by its ID", () async {
     try {
       final response = await client.modelFindById(store, 'Person', modelID);
       final person = Person.fromJson(response);
@@ -118,7 +119,7 @@ main() {
     }
   });
 
-  test("model find", () async {
+  test("Run an advanced query on store models", () async {
     try {
       JSONQuery queryJSON = JSONQuery.fromJson({
         'ands': [{
@@ -146,7 +147,7 @@ main() {
     }
   });
 
-  test("create listener", () async {
+  test("Create an update listener on the store", () async {
     try {
       List<int> events = [];
       Stream<ListenResult> blocker = client.createListener(store);
@@ -167,7 +168,6 @@ main() {
     }
   });
 }
-
 
 class Person {
   final String ID;

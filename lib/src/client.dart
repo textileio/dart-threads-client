@@ -8,15 +8,16 @@ import 'generated/api.pbgrpc.dart';
 import 'models.dart';
 import 'utils.dart';
 
-class Client {
+class ThreadsClient {
   ClientChannel channel;
   APIClient stub;
   Uuid uuid = Uuid();
   String host = '127.0.0.1';
   int port = 6006;
 
-  Future<void> main(List<String> args) async {
-    // @todo use args for non-default ip/port/timeout
+  ThreadsClient({String host = '127.0.0.1', int port = 6006}) {
+    host = host;
+    port = port;
     channel = ClientChannel(host,
         port: port,
         options:
@@ -24,6 +25,15 @@ class Client {
     stub = APIClient(channel,
         options: CallOptions(timeout: Duration(seconds: 30)));
   }
+  // Future<void> main(List<String> args) async {
+  //   // @todo use args for non-default ip/port/timeout
+  //   channel = ClientChannel(host,
+  //       port: port,
+  //       options:
+  //           const ChannelOptions(credentials: ChannelCredentials.insecure()));
+  //   stub = APIClient(channel,
+  //       options: CallOptions(timeout: Duration(seconds: 30)));
+  // }
 
   Future<String> newStore() async {
     var store = await stub.newStore(NewStoreRequest());
