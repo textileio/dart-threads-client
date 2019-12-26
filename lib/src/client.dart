@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:protobuf/protobuf.dart';
 import 'package:uuid/uuid.dart';
 import 'package:grpc/grpc.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
@@ -161,31 +162,32 @@ class ThreadsClient {
     return stream;
   }
   
-  // @todo: Add each of the required methods
-  // @todo: readTransaction
-  // @todo: writeTransaction
-
-  // @todo: wip
-  StreamController<T> readTransaction<T>() {
-    // @todo: needs test still;
+  ResponseStream<ReadTransactionReply> readTransaction(StreamController<GeneratedMessage> writer) {
+    // Create transation input stream
     final controller = StreamController<ReadTransactionRequest>();
-    var listener = stub.readTransaction(controller.stream);
-    print(listener.isEmpty);
 
-    final writer = StreamController<T>();
-    final transform = returnReadTransform<T>();
+    // Transform user inputs to TransactionRequests
+    final transform = returnReadTransform();
     writer.stream.transform(transform).pipe(controller);
 
-    // @todo: need to compose listener+writer for app to uses
-    return writer;
+    // Register stream and get listener
+    final listener = stub.readTransaction(controller.stream);
+
+    return listener;
   }
 
-  // @todo: wip
-  Stream<WriteTransactionRequest> writeTransaction() {
-    // @todo: needs test still;
+  ResponseStream<WriteTransactionReply> writeTransaction(StreamController<GeneratedMessage> writer) {
+    // Create transation input stream
     final controller = StreamController<WriteTransactionRequest>();
-    stub.writeTransaction(controller.stream);
-    return controller.stream;
+
+    // Transform user inputs to TransactionRequests
+    final transform = returnWriteTransform();
+    writer.stream.transform(transform).pipe(controller);
+
+    // Register stream and get listener
+    final listener = stub.writeTransaction(controller.stream);
+
+    return listener;
   }
 
   Future<void> shutdown() async {
