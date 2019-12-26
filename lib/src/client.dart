@@ -1,20 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:protobuf/protobuf.dart';
 import 'package:uuid/uuid.dart';
 import 'package:grpc/grpc.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
 import 'generated/api.pbgrpc.dart';
-import 'generated/api.pb.dart';
+import 'models.dart';
+import 'utils.dart';
 
 class Client {
   ClientChannel channel;
   APIClient stub;
   Uuid uuid = Uuid();
+  String host = '127.0.0.1';
+  int port = 6006;
 
   Future<void> main(List<String> args) async {
     // @todo use args for non-default ip/port/timeout
-    channel = ClientChannel('127.0.0.1',
-        port: 6006,
+    channel = ClientChannel(host,
+        port: port,
         options:
             const ChannelOptions(credentials: ChannelCredentials.insecure()));
     stub = APIClient(channel,
@@ -126,21 +130,56 @@ class Client {
     return JsonCodec().decode(response.getField(1));
   }
 
-  // Future<Map<String, dynamic>> modelFind(String storeID, String modelName, Map<String, dynamic> queryJSON) async {
-  //   var request = ModelFindRequest();  
-  //   request.storeID = storeID;
-  //   request.modelName = modelName;
-  //   request.queryJSON = base64.decode(JsonCodec().encode(queryJSON).toString());
-  //   var response = await stub.modelFind(request);
-  //   print(response);
-  //   return JsonCodec().decode(response.getField(1));
-  // }
+  Future<List<Map<String, dynamic>>> modelFind(String storeID, String modelName, JSONQuery query) async {
+    var request = ModelFindRequest();  
+    request.storeID = storeID;
+    request.modelName = modelName;
+    request.queryJSON = utf8.encode(JsonCodec().encode(query.toJson()));
+    var response = await stub.modelFind(request);
+    var entities = response.getField(1);
+    List<Map<String, dynamic>> fin = [];
+    for (var i=0; i<entities.length; i++) {
+      fin.add(
+        JsonCodec().decode(utf8.decode(entities[i])) as Map<String, dynamic>
+      );
+    }
+    return fin;
+  }
 
+  Stream<ListenResult> createListener(String storeID) {
+    // @todo: createListener seems to only handle a storeId here, whereas in js, more. 
+    var request = ListenRequest();  
+    request.storeID = storeID;
+    final typeTransform = new StreamTransformer.fromHandlers(handleData: handleListenData);
+    final stream = stub.listen(request).transform(typeTransform);
+    return stream;
+  }
+  
   // @todo: Add each of the required methods
-  // @todo: modelFind
   // @todo: readTransaction
   // @todo: writeTransaction
-  // @todo: listen
+
+  // @todo: wip
+  StreamController<T> readTransaction<T>() {
+    // @todo: needs test still;
+    final controller = StreamController<ReadTransactionRequest>();
+    var listener = stub.readTransaction(controller.stream);
+    print(listener.isEmpty);
+
+    final writer = StreamController<T>();
+    final transform = returnReadTransform<T>();
+    writer.stream.transform(transform).pipe(controller);
+
+    // @todo: need to compose listener+writer for app to uses
+    return writer;
+  }
+
+  Stream<WriteTransactionRequest> writeTransaction() {
+    // @todo: needs test still;
+    final controller = StreamController<WriteTransactionRequest>();
+    stub.writeTransaction(controller.stream);
+    return controller.stream;
+  }
 
   Future<void> shutdown() async {
     await channel.shutdown();

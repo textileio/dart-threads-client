@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:threads_client/src/client.dart';
+import 'package:threads_client/client.dart';
 import 'package:test/test.dart';
-
 
 const personSchema = {
   '\$id': 'https://example.com/person.schema.json',
@@ -130,26 +129,56 @@ main() {
     }
   });
 
-  // test("model find", () async {
-  //   try {
-  //     Map<String, dynamic> queryJSON = {
-  //       'ands': [
-  //         {
-  //           'fieldPath': 'firstName',
-  //           'operation': 'eq',
-  //           'value': { 'string': 'Adam' }
-  //         }
-  //       ]
-  //     };
-  //     await client.modelFind(store, 'Person', queryJSON);
-  //     // final person = Person.fromJson(response);
-  //     // expect(person.age, newAge);
-  //   } catch (error) {
-  //     // fail if error
-  //     expect(error.toString(), "");
-  //   }
-  // });
+  test("model find", () async {
+    try {
+      JSONQuery queryJSON = JSONQuery.fromJson({
+        'ands': [{
+            'fieldPath': 'firstName',
+            'operation': 'Eq',
+            'value': { 'string': 'Adam' }
+          },{
+            'fieldPath': 'firstName',
+            'operation': 'Eq',
+            'value': { 'string': 'Doe' }
+          }],
+        'ors': [{
+          'ands': [{
+            'fieldPath': 'firstName',
+            'operation': 'Eq',
+            'value': { 'string': 'Doe' }
+          }]
+        }],
+        'sort': { 'fieldPath': 'firstName', 'desc': true}
+      });
+      expect(queryJSON.ands, isNotEmpty);
+      await client.modelFind(store, 'Person', queryJSON);
+    } catch (error) {
+      expect(error.toString(), "");
+    }
+  });
+
+  test("create listener", () async {
+    try {
+      List<int> events = [];
+      Stream<ListenResult> blocker = client.createListener(store);
+      var stream = blocker.listen((result){
+        Person person = Person.fromJson(result.entity);
+        events.add(person.age);
+      });
+
+      var ages = [22, 23];
+      for (var i=0; i<ages.length; i++) {
+        var model = createPerson(ID: modelID, age: ages[i]);
+        await client.modelSave(store, 'Person', [model.toJson()]);
+      };
+      await stream.cancel();
+      expect(events.length, ages.length);
+    } catch (error) {
+      expect(error.toString(), "");
+    }
+  });
 }
+
 
 class Person {
   final String ID;
