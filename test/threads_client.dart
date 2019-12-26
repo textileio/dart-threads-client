@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:threads_client/client.dart';
+import 'package:threads_client/threads_client.dart';
 import 'package:test/test.dart';
 
 const personSchema = {
@@ -55,17 +55,6 @@ main() {
     var jsonString = jsonData.toString();
     await client.registerSchema(storeID: store, name: 'Person', schema: jsonString);
     expect(true, true);
-  });
-  test("register schema", () async {
-    var jsonData = JsonCodec().encode(personSchema);
-    var jsonString = jsonData.toString();
-    try {
-      await client.registerSchema(storeID: store, name: 'Person', schema: jsonString);
-      expect(true, true);
-    } catch (error) {
-      // allow pass if schema exists
-      expect(error.toString(), "gRPC Error (2, already registered model)");
-    }
   });
   test("get store link", () async {
     var link = await client.getStoreLink(store);

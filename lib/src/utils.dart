@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:threads_client/client.dart';
+import 'package:threads_client/threads_client.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
 
 void handleListenData(ListenReply data, EventSink<ListenResult> sink) {

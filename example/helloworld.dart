@@ -1,5 +1,5 @@
 
-import 'package:threads_client/client.dart';
+import 'package:threads_client/threads_client.dart';
 
 main(List<String> args) async {
   var client = new Client();
