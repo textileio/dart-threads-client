@@ -131,7 +131,7 @@ class JSONCriterion {
     
 }
 
-createJSONCriterionList (List<dynamic> input) {
+List<JSONCriterion> createJSONCriterionList (List<dynamic> input) {
   List<JSONCriterion> results = [];
   for (var i=0; i<input.length; i++) {
     results.add(
@@ -141,7 +141,7 @@ createJSONCriterionList (List<dynamic> input) {
   return results;
 }
 
-createJSONQueryList (List<dynamic> input) {
+List<JSONQuery> createJSONQueryList (List<dynamic> input) {
   List<JSONQuery> results = [];
   for (var i=0; i<input.length; i++) {
     results.add(
