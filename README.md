@@ -4,7 +4,7 @@
 [![Chat on Slack](https://img.shields.io/badge/slack-slack.textile.io-informational.svg?style=popout-square)](https://slack.textile.io)
 [![GitHub license](https://img.shields.io/github/license/textileio/dart-threads-client.svg?style=popout-square)](./LICENSE)
 [![CircleCI branch](https://img.shields.io/circleci/project/github/textileio/dart-threads-client/master.svg?style=popout-square)](https://circleci.com/gh/textileio/dart-threads-client)
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=popout-square)](https://github.com/RichardLitt/standard-readme)
+[![Pub](https://img.shields.io/pub/v/threads_client.svg)](https://pub.dartlang.org/packages/threads_client)
 
 > Textile's Dart client for interacting with remote Threads
 
