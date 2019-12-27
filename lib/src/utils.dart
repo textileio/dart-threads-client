@@ -6,18 +6,18 @@ import 'package:threads_client/threads_client.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
 
 void handleListenData(ListenReply data, EventSink<ListenResult> sink) {
-  ListenResult result = ListenResult.fromJson({
-    "modelName": data.modelName,
-    "entityID": data.entityID,
-    "action": data.action.name,
-    "entity": JsonCodec().decode(utf8.decode(data.entity))
+  final result = ListenResult.fromJson({
+    'modelName': data.modelName,
+    'entityID': data.entityID,
+    'action': data.action.name,
+    'entity': JsonCodec().decode(utf8.decode(data.entity))
   });
   sink.add(result);
 }
 
-returnReadTransform() {
-  final func = (GeneratedMessage data, EventSink<ReadTransactionRequest> sink) {
-    var request = ReadTransactionRequest();
+dynamic returnReadTransform() {
+  return (GeneratedMessage data, EventSink<ReadTransactionRequest> sink) {
+    final request = ReadTransactionRequest();
     switch (data.runtimeType) {
       case ModelFindByIDRequest:
         request.modelFindByIDRequest = data as ModelFindByIDRequest;
@@ -33,12 +33,11 @@ returnReadTransform() {
         break;
     }
   };
-  return func;
 }
 
-returnWriteTransform() {
-  final func = (GeneratedMessage data, EventSink<WriteTransactionRequest> sink) {
-    var request = WriteTransactionRequest();
+dynamic returnWriteTransform() {
+  return (GeneratedMessage data, EventSink<WriteTransactionRequest> sink) {
+    final request = WriteTransactionRequest();
     switch (data.runtimeType) {
       case ModelFindByIDRequest:
         request.modelFindByIDRequest = data as ModelFindByIDRequest;
@@ -66,5 +65,4 @@ returnWriteTransform() {
         break;
     }
   };
-  return func;
 }

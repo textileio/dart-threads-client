@@ -4,10 +4,10 @@ import 'package:protobuf/protobuf.dart';
 import 'package:uuid/uuid.dart';
 import 'package:grpc/grpc.dart';
 import 'package:threads_client/src/generated/api.pb.dart';
+import 'defaults.dart';
 import 'generated/api.pbgrpc.dart';
 import 'models.dart';
 import 'utils.dart';
-import 'defaults.dart';
 
 class ThreadsClient {
   Uuid uuid;
@@ -30,12 +30,12 @@ class ThreadsClient {
   }
 
   Future<String> newStore() async {
-    var store = await stub.newStore(NewStoreRequest());
+    final store = await stub.newStore(NewStoreRequest());
     return store.getField(1);
   }
 
   Future<void> registerSchema({String storeID, String name, String schema}) async {
-    var request = RegisterSchemaRequest();  
+    final request = RegisterSchemaRequest();  
     request.storeID = storeID;
     request.name = name;
     request.schema = schema;
@@ -44,14 +44,14 @@ class ThreadsClient {
   }
 
   Future<void> start(String storeID) async {
-    var request = StartRequest();
+    final request = StartRequest();
     request.storeID = storeID;
     await stub.start(request);
     return;
   }
 
   Future<void> startFromAddress({String storeID, String address, String followKey, String readKey}) async {
-    var request = StartFromAddressRequest();  
+    final request = StartFromAddressRequest();  
     if (storeID != null) {
       request.storeID = storeID;
     }
@@ -69,10 +69,10 @@ class ThreadsClient {
   }
 
   Future<StoreLinks> getStoreLink(String storeID) async {
-    var request = GetStoreLinkRequest();
+    final request = GetStoreLinkRequest();
     request.storeID = storeID;
-    var output = await stub.getStoreLink(request);
-    var response = StoreLinks(
+    final output = await stub.getStoreLink(request);
+    final response = StoreLinks(
       output.addresses,
       base64.encode(output.followKey),
       base64.encode(output.readKey)
@@ -80,26 +80,27 @@ class ThreadsClient {
     return response;
   }
 
-  Future<List<Map<String, dynamic>>> modelCreate(String storeID, String modelName, List<Map<String, dynamic>> values) async {
-    var request = ModelCreateRequest();  
+  Future<List<Map<String,dynamic>>> modelCreate(String storeID, String modelName, List<Map<String, dynamic>> values) async {
+    final request = ModelCreateRequest();  
     request.storeID = storeID;
     request.modelName = modelName;
     for (var i=0; i<values.length; i++) {
-      values[i]["ID"] = uuid.v4();
-      var valString = json.encode(values[i]).toString();
+      values[i]['ID'] = uuid.v4();
+      final valString = json.encode(values[i]).toString();
       request.values.add(valString);
     }
-    var response = await stub.modelCreate(request);
-    List<dynamic> jsn = response.getField(1).map((f) => json.decode(f.toString())).toList();
-    return jsn.map((j) => j as Map<String, dynamic>).toList();
+    final response = await stub.modelCreate(request);
+    final entities = response.entities;
+
+    return List<Map<String,dynamic>>.from(entities.map((e) => json.decode(e)));
   }
 
   Future<void> modelSave(String storeID, String modelName, List<Map<String, dynamic>> values) async {
-    var request = ModelSaveRequest();  
+    final request = ModelSaveRequest();  
     request.storeID = storeID;
     request.modelName = modelName;
     for (var i=0; i<values.length; i++) {
-      var valString = json.encode(values[i]).toString();
+      final valString = json.encode(values[i]).toString();
       request.values.add(valString);
     }
     await stub.modelSave(request);
@@ -107,7 +108,7 @@ class ThreadsClient {
   }
 
   Future<void> modelDelete(String storeID, String modelName, List<String> entityIDs) async {
-    var request = ModelDeleteRequest();  
+    final request = ModelDeleteRequest();  
     request.storeID = storeID;
     request.modelName = modelName;
     for (var i=0; i<entityIDs.length; i++) {
@@ -118,7 +119,7 @@ class ThreadsClient {
   }
 
   Future<bool> modelHas(String storeID, String modelName, List<String> entityIDs) async {
-    var request = ModelHasRequest();  
+    final request = ModelHasRequest();  
     request.storeID = storeID;
     request.modelName = modelName;
     for (var i=0; i<entityIDs.length; i++) {
@@ -129,35 +130,30 @@ class ThreadsClient {
   }
 
   Future<Map<String, dynamic>> modelFindById(String storeID, String modelName, String entityID) async {
-    var request = ModelFindByIDRequest();  
+    final request = ModelFindByIDRequest();  
     request.storeID = storeID;
     request.modelName = modelName;
     request.entityID = entityID;
-    var response = await stub.modelFindByID(request);
+    final response = await stub.modelFindByID(request);
     return json.decode(response.getField(1));
   }
 
   Future<List<Map<String, dynamic>>> modelFind(String storeID, String modelName, JSONQuery query) async {
-    var request = ModelFindRequest();  
+    final request = ModelFindRequest();  
     request.storeID = storeID;
     request.modelName = modelName;
     request.queryJSON = utf8.encode(json.encode(query.toJson()));
-    var response = await stub.modelFind(request);
-    var entities = response.getField(1);
-    List<Map<String, dynamic>> fin = [];
-    for (var i=0; i<entities.length; i++) {
-      fin.add(
-        json.decode(utf8.decode(entities[i])) as Map<String, dynamic>
-      );
-    }
-    return fin;
+    final response = await stub.modelFind(request);
+    return List<Map<String, dynamic>>.from(
+      response.entities.map((et) => json.decode(utf8.decode(et)))
+    );
   }
 
   Stream<ListenResult> createListener(String storeID) {
     // @todo: createListener seems to only handle a storeId here, whereas in js, more. 
-    var request = ListenRequest();  
+    final request = ListenRequest();  
     request.storeID = storeID;
-    final typeTransform = new StreamTransformer.fromHandlers(handleData: handleListenData);
+    final typeTransform = StreamTransformer.fromHandlers(handleData: handleListenData);
     final stream = stub.listen(request).transform(typeTransform);
     return stream;
   }

@@ -7,19 +7,19 @@ class StoreLinks {
   final String readKey;
   StoreLinks._(this.addresses, this.followKey, this.readKey);
   factory StoreLinks(List<String> addresses, String followKey, String readKey) {
-    return new StoreLinks._(addresses, followKey, readKey);
+    return StoreLinks._(addresses, followKey, readKey);
   }
   StoreLinks.fromJson(Map<String, dynamic> values)
-    : addresses = values['addresses'] as List<String>,
-      followKey = values['followKey'] as String,
-      readKey = values['readKey'] as String;
+    : addresses = List<String>.from(values['addresses']),
+      followKey = values['followKey'],
+      readKey = values['readKey'];
 
   Map<String, dynamic> toJson() =>
-  {
-    'addresses': addresses,
-    'followKey': followKey,
-    'readKey': readKey
-  };
+    Map<String, dynamic>.from({
+      'addresses': addresses,
+      'followKey': followKey,
+      'readKey': readKey
+    });
 }
 
 class ListenResult {
@@ -29,18 +29,18 @@ class ListenResult {
   Map<String, dynamic> entity;
   ListenResult(this.modelName, this.entityID, this.action, this.entity);
   ListenResult.fromJson(Map<String, dynamic> values)
-    : modelName = values['modelName'] as String,
-      entityID = values['entityID'] as String,
-      action = values['action'] as String,
-      entity = values['entity'] as Map<String, dynamic>;
+    : modelName = values['modelName'],
+      entityID = values['entityID'],
+      action = values['action'],
+      entity = Map<String, dynamic>.from(values['entity']);
 
   Map<String, dynamic> toJson() =>
-  {
-    'modelName': modelName,
-    'entityID': entityID,
-    'action': action,
-    'entity': entity
-  };
+    Map<String, dynamic>.from({
+      'modelName': modelName,
+      'entityID': entityID,
+      'action': action,
+      'entity': entity
+    });
 }
 
 class JSONValue {
@@ -55,7 +55,7 @@ class JSONValue {
       number = values.containsKey('number') ? values['number'] as Float : null;
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> result = {};
+    final result = {};
     if (string != null) {
       result['string'] = string;
     }
@@ -65,7 +65,7 @@ class JSONValue {
     if (number != null) {
       result['number'] = number;
     }
-    return result;
+    return Map<String, dynamic>.from(result);
   }
 }
 
@@ -77,10 +77,10 @@ class JSONSort {
     : fieldPath = settings['fieldPath'] as String,
       desc = settings['desc'] as bool;
   Map<String, dynamic> toJson() =>
-    {
+    Map<String, dynamic>.from({
       'fieldPath': fieldPath,
       'desc': desc
-    };
+    });
 }
 
 // @todo: probably should just be an enum
@@ -116,7 +116,7 @@ class JSONCriterion {
       value = criterion.containsKey('value') ? JSONValue.fromJson(criterion['value']) : null,
       query = criterion.containsKey('query') ? JSONQuery.fromJson(criterion['query']) : null;
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> result = {
+    final result = {
       'fieldPath': fieldPath,
       'operation': operation
     };
@@ -126,29 +126,29 @@ class JSONCriterion {
     if (query != null) {
       result['query'] = query.toJson();
     }
-    return result;
+    return Map<String, dynamic>.from(result);
   }
     
 }
 
 List<JSONCriterion> createJSONCriterionList (List<dynamic> input) {
-  List<JSONCriterion> results = [];
+  final results = [];
   for (var i=0; i<input.length; i++) {
     results.add(
-      JSONCriterion.fromJson(input[i] as Map<String, dynamic>)
+      JSONCriterion.fromJson(Map<String, dynamic>.from(input[i]))
     );
   }
-  return results;
+  return List<JSONCriterion>.from(results);
 }
 
 List<JSONQuery> createJSONQueryList (List<dynamic> input) {
-  List<JSONQuery> results = [];
+  final results = [];
   for (var i=0; i<input.length; i++) {
     results.add(
-      JSONQuery.fromJson(input[i] as Map<String, dynamic>)
+      JSONQuery.fromJson(Map<String, dynamic>.from(input[i]))
     );
   }
-  return results;
+  return List<JSONQuery>.from(results);
 }
 
 class JSONQuery {
@@ -163,16 +163,16 @@ class JSONQuery {
       sort = query.containsKey('sort') ? JSONSort.fromJson(query['sort']): null;
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> result = {};
+    final result = Map<String, dynamic>.from({});
     if (ands != null) {
-      result['ands'] = ands.map((an) => an.toJson()).toList();
+      result['ands'] = List<Map<String, dynamic>>.from(ands.map((an) => an.toJson()));
     }
     if (ors != null) {
-      result['ors'] = ors.map((or) => or.toJson()).toList();
+      result['ors'] = List<Map<String, dynamic>>.from(ors.map((or) => or.toJson()));
     }
     if (sort != null) {
       result['sort'] = sort.toJson();
     }
-    return result;
+    return Map<String, dynamic>.from(result);
   }
 }

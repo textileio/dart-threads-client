@@ -25,7 +25,7 @@ In the `pubspec.yaml` of your project, add the following dependency:
 ```
 dependencies:
   ...
-  threads_client: "^0.1.0"
+  threads_client: "^0.1.1"
 ```
 
 ### Run Threads Daemon
@@ -59,7 +59,7 @@ pub get
 ### Run tests
 
 ```sh
-dart test/threads_client.dart
+dart test/threads_client_test.dart
 ```
 
 ### Run example

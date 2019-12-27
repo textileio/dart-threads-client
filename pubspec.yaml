@@ -1,7 +1,7 @@
 name: threads_client
 description: Dart client for Textile threads (https://textile.io) a database built on IPFS.
 homepage: https://github.com/textileio/dart-threads-client
-version: '0.1.0'
+version: '0.1.1'
 
 environment:
   sdk: '>=2.2.0 <3.0.0'
@@ -14,3 +14,5 @@ dependencies:
 
 dev_dependencies:
   test: ^1.6.4
+  pedantic: ^1.0.0
+
