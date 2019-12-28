@@ -1,4 +1,4 @@
-name: Publish threads_client to pub.dev
+name: Publish
 
 on:
   push:
