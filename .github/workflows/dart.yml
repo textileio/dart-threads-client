@@ -4,15 +4,17 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     container:
-      image:  google/dart:latest
-
+      image:  andrewxhill/golang-dart-unstable:latest
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies
-      run: pub get
+      run: |
+            export PATH="$PATH:/usr/lib/dart/bin";
+            pub get
     - name: Run tests
-      run: pub run test
+      run: |
+           threadsd &
+           export PATH=/usr/lib/dart/bin:$PATH;
+           sleep 10; pub run test

@@ -11,3 +11,6 @@ doc/api/
 
 # Directory created by WebStorm
 .idea/
+
+# Test daemon dir
+.gosrc
