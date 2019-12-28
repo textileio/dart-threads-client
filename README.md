@@ -22,10 +22,12 @@ Join us on our [public Slack channel](https://slack.textile.io/) for news, discu
 
 In the `pubspec.yaml` of your project, add the following dependency:
 
+_See latest version in badge at top of README.
+
 ```
 dependencies:
   ...
-  threads_client: "^0.1.1"
+  threads_client: "^0.x.x"
 ```
 
 ### Run Threads Daemon
