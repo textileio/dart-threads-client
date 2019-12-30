@@ -19,12 +19,12 @@ class ThreadsClient {
 
   ThreadsClient({String host = '127.0.0.1', int port = 6006, Duration timeout = default_timeout, ChannelCredentials credentials = default_credentials}) {
     uuid = Uuid();
-    host = host;
-    port = port;
+    this.host = host;
+    this.port = port;
     channel = ClientChannel(host,
         port: port,
         options:
-            const ChannelOptions(credentials: default_credentials));
+          ChannelOptions(credentials: credentials));
     stub = APIClient(channel,
         options: CallOptions(timeout: timeout));
   }
