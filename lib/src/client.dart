@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:protobuf/protobuf.dart';
 import 'package:uuid/uuid.dart';
 import 'package:grpc/grpc.dart';
-import 'package:threads_client/src/generated/api.pb.dart';
+import 'package:threads_client_grpc/api.pbgrpc.dart';
+import 'package:threads_client_grpc/api.pb.dart';
 import 'defaults.dart';
-import 'generated/api.pbgrpc.dart';
 import 'models.dart';
 import 'utils.dart';
 

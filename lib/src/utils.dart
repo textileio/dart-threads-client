@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:protobuf/protobuf.dart';
 import 'package:threads_client/threads_client.dart';
-import 'package:threads_client/src/generated/api.pb.dart';
+import 'package:threads_client_grpc/api.pb.dart';
 
 void handleListenData(ListenReply data, EventSink<ListenResult> sink) {
   final result = ListenResult.fromJson({
