@@ -3,9 +3,9 @@
 [![Made by Textile](https://img.shields.io/badge/made%20by-Textile-informational.svg?style=popout-square)](https://textile.io)
 [![Chat on Slack](https://img.shields.io/badge/slack-slack.textile.io-informational.svg?style=popout-square)](https://slack.textile.io)
 [![GitHub license](https://img.shields.io/github/license/textileio/dart-threads-client.svg?style=popout-square)](./LICENSE)
-[![Dart CI](https://github.com/textileio/dart-threads-client/workflows/Dart%20CI/badge.svg?branch=master)](https://github.com/textileio/dart-threads-client/actions?query=workflow%3A%22Dart+CI%22)
+[![Dart CI](https://github.com/textileio/dart-threads-client/workflows/Dart%20CI/badge.svg?style=popout-square&branch=master)](https://github.com/textileio/dart-threads-client/actions?query=workflow%3A%22Dart+CI%22)
 [![Pub](https://img.shields.io/pub/v/threads_client.svg)](https://pub.dartlang.org/packages/threads_client)
-[![Threads version](https://img.shields.io/badge/dynamic/yaml?color=3527ff&label=Threads&prefix=v&query=packages.threads_client_grpc.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Ftextileio%2Fdart-threads-client%2Fmaster%2Fpubspec.lock)](https://github.com/textileio/go-threads)
+[![Threads version](https://img.shields.io/badge/dynamic/yaml?style=popout-square&color=3527ff&label=Threads&prefix=v&query=packages.threads_client_grpc.version&url=https%3A%2F%2Fraw.githubusercontent.com%2Ftextileio%2Fdart-threads-client%2Fmaster%2Fpubspec.lock)](https://github.com/textileio/go-threads)
 
 > Textile's Dart client for interacting with remote Threads
 
