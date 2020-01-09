@@ -1,14 +1,15 @@
-name: Dart CI
+name: test
 
 on:
   push:
     branches:
-      - '*'
-      - '*/*'
-      - '!master'
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     container:
       image:  andrewxhill/golang-dart-unstable:latest
