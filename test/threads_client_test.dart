@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:threads_client/threads_client.dart';
 import 'package:test/test.dart';
 
@@ -36,10 +37,14 @@ void main() async {
   String followKey;
   String readKey;
   String modelID;
+  Map<String, String> env = Platform.environment;
   final newAge = 42;
+
   setUp(() {
     // Create a new threads client
-    client = ThreadsClient();
+    var host = env.containsKey('THREADS_HOST') && env['THREADS_HOST'] != '' ? env['THREADS_HOST'] : 'localhost';
+    var port = env.containsKey('THREADS_PORT') && env['THREADS_PORT'] != '' ? int.parse(env['THREADS_PORT']) : 6006;
+    client = ThreadsClient(host: host, port: port);
   });
   tearDown(() async {
     // Shutdown the threads client.

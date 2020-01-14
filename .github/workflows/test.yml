@@ -12,7 +12,15 @@ jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image:  andrewxhill/golang-dart-unstable:latest
+      image:  google/dart:latest
+    services:
+      threads:
+        image: textile/go-threads
+        ports:
+        - 4006:4006
+        - 5006:5006
+        - 6006:6006
+        - 7006:7006
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies
@@ -21,6 +29,8 @@ jobs:
             pub get
     - name: Run tests
       run: |
-           threadsd &
            export PATH=/usr/lib/dart/bin:$PATH;
            sleep 10; pub run test
+      env:
+        THREADS_HOST: threads
+        THREADS_PORT: ${{ job.services.threads.ports[6006] }}
