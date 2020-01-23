@@ -18,9 +18,9 @@ jobs:
         image: textile/go-threads
         ports:
         - 4006:4006
-        - 5006:5006
+        - 5007:5007
         - 6006:6006
-        - 7006:7006
+        - 6007:6007
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies
