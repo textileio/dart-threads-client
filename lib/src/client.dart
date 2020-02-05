@@ -5,11 +5,11 @@ import 'package:uuid/uuid.dart';
 import 'package:grpc/grpc.dart';
 import 'package:threads_client_grpc/api.pbgrpc.dart';
 import 'package:threads_client_grpc/api.pb.dart';
-import 'defaults.dart';
+import 'config.dart';
 import 'models.dart';
 import 'utils.dart';
 
-class ThreadsClient {
+class Client {
   Uuid uuid;
 
   ClientChannel channel;
@@ -17,16 +17,21 @@ class ThreadsClient {
   String host;
   int port;
 
-  ThreadsClient({String host = '127.0.0.1', int port = 6006, Duration timeout = default_timeout, ChannelCredentials credentials = default_credentials}) {
+  Client({Config config}) {
     uuid = Uuid();
-    this.host = host;
-    this.port = port;
+    if (config == null) {
+      config = Config();
+    }
+    host = config.host;
+    port = config.port;
     channel = ClientChannel(host,
         port: port,
         options:
-          ChannelOptions(credentials: credentials));
-    stub = APIClient(channel,
-        options: CallOptions(timeout: timeout));
+          ChannelOptions(credentials: config.credentials));
+        stub = APIClient(
+          channel,
+          options: config.getCallOptions()
+        );
   }
 
   Future<String> newStore() async {
@@ -187,6 +192,6 @@ class ThreadsClient {
   }
 
   Future<void> shutdown() async {
-    await channel.shutdown();
+    await channel.terminate();
   }
 }

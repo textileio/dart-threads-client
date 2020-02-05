@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:threads_client/threads_client.dart';
+import 'package:threads_client/threads_client.dart' as threads;
 import 'package:test/test.dart';
 
 const personSchema = {
@@ -31,22 +31,26 @@ const personSchema = {
 };
 
 void main() async {
-  ThreadsClient client;
+  threads.Client client;
   String store;
   String address;
   String followKey;
   String readKey;
   String modelID;
-  Map<String, String> env = Platform.environment;
+  final env = Platform.environment;
   final newAge = 42;
 
-  setUp(() {
+  setUpAll(() {
+    // // Thread client options
+    final config = threads.Config(
+      host: env.containsKey('THREADS_HOST') && env['THREADS_HOST'] != '' ? env['THREADS_HOST'] : '127.0.0.1',
+      port: env.containsKey('THREADS_PORT') && env['THREADS_PORT'] != '' ? int.parse(env['THREADS_PORT']) : 6006
+    );
+
     // Create a new threads client
-    var host = env.containsKey('THREADS_HOST') && env['THREADS_HOST'] != '' ? env['THREADS_HOST'] : 'localhost';
-    var port = env.containsKey('THREADS_PORT') && env['THREADS_PORT'] != '' ? int.parse(env['THREADS_PORT']) : 6006;
-    client = ThreadsClient(host: host, port: port);
+    client = threads.Client(config: config);
   });
-  tearDown(() async {
+  tearDownAll(() async {
     // Shutdown the threads client.
     await client.shutdown();
   });
@@ -120,7 +124,7 @@ void main() async {
 
   test('Run an advanced query on store models', () async {
     try {
-      final queryJSON = JSONQuery.fromJson({
+      final queryJSON = threads.JSONQuery.fromJson({
         'ands': [{
             'fieldPath': 'firstName',
             'operation': 'Eq',
