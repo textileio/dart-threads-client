@@ -68,6 +68,7 @@
 <h2 id="table-of-contents">Table of Contents</h2>
 <ul>
 <li><a href="#getting_started">Getting Started</a></li>
+<li><a href="#Usage">Usage</a></li>
 <li><a href="#development">Development</a></li>
 <li><a href="#contributing">Contributing</a></li>
 <li><a href="#changelog">Changelog</a></li>
@@ -79,40 +80,29 @@
   ...
   threads_client: "^0.x.x"
 </code></pre>
-<h3 id="run-threads-daemon">Run Threads Daemon</h3>
+<h3 id="connect-to-a-threads-daemon">Connect to a Threads Daemon</h3>
+<p>You can use Textile's hosted daemons or run your own.</p>
+<h5 id="use-hosted-threads">Use hosted Threads</h5>
+<p><a href="https://github.com/textileio/dart-textile">Textile Threads</a>.</p>
+<h5 id="run-your-own-daemon">Run your own daemon</h5>
 <p>You need to run a threads daemon available to the client.</p>
 <pre class="language-sh"><code class="language-sh">git clone git@github.com:textileio/go-threads.git
 cd go-threads
 go run threadsd/main.go -debug
 </code></pre>
-<h3 id="usage">Usage</h3>
-<p>You can see complete usage examples in the provided test suite:</p>
-<p><a href="https://github.com/textileio/dart-threads-client/blob/master/test/threads_client.dart">https://github.com/textileio/dart-threads-client/blob/master/test/threads_client.dart#L41</a></p>
-<h2 id="development">Development</h2>
-<h3 id="install">Install</h3>
-<p>Run the daemon, as above. Next, install and run the Dart <code>threads_client</code>:</p>
-<pre class="language-sh"><code class="language-sh">git clone git@github.com:textileio/dart-threads-client.git
-cd dart-threads-client
-pub get
-</code></pre>
-<h3 id="run-tests">Run tests</h3>
-<pre class="language-sh"><code class="language-sh">dart test/threads_client_test.dart
-</code></pre>
-<h3 id="run-example">Run example</h3>
-<pre class="language-sh"><code class="language-sh">dart examples/helloworld.dart
-</code></pre>
-<h2 id="usage-2">Usage</h2>
-<h2 id="start-client--create-a-db">Start Client &amp; Create a DB</h2>
+<h2 id="usage">Usage</h2>
+<p><a href="https://textileio.github.io/dart-threads-client/threads_client/threads_client-library.html">Read the Complete API Documentation</a>.</p>
+<h3 id="create-a-db">Create a DB</h3>
 <pre class="language-dart"><code class="language-dart">import 'package:threads_client/threads_client.dart' as threads;
 
 void main(List&lt;String&gt; args) async {
   final client = threads.Client();
-  final db = 'bafkr2ecolcv34sdo2mivzn3spt4ofmgzmaaplqoedm';
-  await client.newDB(db);
-  print('New DB: $db');
+  final dbId = 'bafk7ayo2xuuafgx6ubbcn2lro3s7oixgujdda6shv4';
+  final creds = threads.Creds.fromStrings(dbId);
+  await client.newDB(creds);
 }
 </code></pre>
-<h2 id="run-threads-using-hosted-textile-api">Run Threads using hosted Textile API</h2>
+<h3 id="run-threads-using-hosted-textile-api">Run Threads using hosted Textile API</h3>
 <pre class="language-dart"><code class="language-dart">import 'package:textile/textile.dart' as textile;
 import 'package:threads_client/threads_client.dart' as threads;
 
@@ -122,9 +112,9 @@ const DEVICE_ID = '&lt;uuid&gt;';
 void main(List&lt;String&gt; args) async {
   final config = textile.ThreadsConfig(APP_TOKEN, DEVICE_ID);
   final client = threads.Client(config: config);
-  final db = 'bafkr2ecolcv34sdo2mivzn3spt4ofmgzmaaplqoedm';
-  await client.newDB(db);
-  print('New DB: $db');
+  final dbId = 'bafk7ayo2xuuafgx6ubbcn2lro3s7oixgujdda6shv4';
+  final creds = threads.Creds.fromStrings(dbId);
+  await client.newDB(creds);
 }
 </code></pre>
 <h3 id="further-examples">Further examples</h3>
@@ -141,6 +131,19 @@ void main(List&lt;String&gt; args) async {
     );
     // Create a new threads client
     client = Client(config);
+</code></pre>
+<h2 id="development">Development</h2>
+<h3 id="install">Install</h3>
+<p>Run the daemon, as above. Next, install and run the Dart <code>threads_client</code>:</p>
+<pre class="language-sh"><code class="language-sh">git clone git@github.com:textileio/dart-threads-client.git
+cd dart-threads-client
+pub get
+</code></pre>
+<h3 id="run-tests">Run tests</h3>
+<pre class="language-sh"><code class="language-sh">dart test/threads_client_test.dart
+</code></pre>
+<h3 id="run-example">Run example</h3>
+<pre class="language-sh"><code class="language-sh">dart examples/helloworld.dart
 </code></pre>
 <h2 id="contributing">Contributing</h2>
 <p>This project is a work in progress. As such, there's a few things you can do right now to help out:</p>
