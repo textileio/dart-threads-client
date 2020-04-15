@@ -97,7 +97,7 @@
     <section class="multi-line-signature">
       <span class="returntype">Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
             <span class="name ">newDBFromAddr</span>
-(<wbr>{<span class="parameter" id="newDBFromAddr-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="newDBFromAddr-param-address"><span class="type-annotation">String</span> <span class="parameter-name">address</span>, </span> <span class="parameter" id="newDBFromAddr-param-key"><span class="type-annotation">String</span> <span class="parameter-name">key</span>, </span> <span class="parameter" id="newDBFromAddr-param-collections"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="threads_client/Collection-class.html">Collection</a></span>&gt;</span></span> <span class="parameter-name">collections</span></span> })
+(<wbr>{<span class="parameter" id="newDBFromAddr-param-address"><span class="type-annotation">String</span> <span class="parameter-name">address</span>, </span> <span class="parameter" id="newDBFromAddr-param-key"><span class="type-annotation">String</span> <span class="parameter-name">key</span>, </span> <span class="parameter" id="newDBFromAddr-param-collections"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="threads_client/Collection-class.html">Collection</a></span>&gt;</span></span> <span class="parameter-name">collections</span></span> })
       
     </section>
     <section class="desc markdown">
@@ -106,10 +106,9 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; newDBFromAddr({Creds creds, String address, String key, List&lt;Collection&gt; collections}) async {
+      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; newDBFromAddr({String address, String key, List&lt;Collection&gt; collections}) async {
   final request = NewDBFromAddrRequest();
-  request.credentials = creds.grpcObject();
-  request.addr = address;
+  request.addr = base64.decode(address);
   if (key != null) {
     request.key = base64.decode(key);
   }

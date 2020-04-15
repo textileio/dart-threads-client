@@ -97,7 +97,7 @@
     <section class="multi-line-signature">
       <span class="returntype">Future<span class="signature">&lt;<wbr><span class="type-parameter"><a href="threads_client/Info-class.html">Info</a></span>&gt;</span></span>
             <span class="name ">getDBInfo</span>
-(<wbr><span class="parameter" id="getDBInfo-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span></span>)
+(<wbr><span class="parameter" id="getDBInfo-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span>)
       
     </section>
     <section class="desc markdown">
@@ -106,12 +106,12 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Future&lt;Info&gt; getDBInfo(Creds creds) async {
+      <pre class="language-dart"><code class="language-dart">Future&lt;Info&gt; getDBInfo(String dbID) async {
   final request = GetDBInfoRequest();
-  request.credentials = creds.grpcObject();
+  request.dbID = base64.decode(dbID);
   final output = await _stub.getDBInfo(request);
   final response = Info(
-    output.addresses,
+    output.addrs.map((addr) =&gt; base64.encode(addr)).toList(),
     base64.encode(output.key)
   );
   return response;

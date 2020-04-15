@@ -97,7 +97,7 @@
     <section class="multi-line-signature">
       <span class="returntype">Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
             <span class="name ">save</span>
-(<wbr><span class="parameter" id="save-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="save-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="save-param-values"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">values</span></span>)
+(<wbr><span class="parameter" id="save-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span>, </span> <span class="parameter" id="save-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="save-param-values"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">values</span></span>)
       
     </section>
     <section class="desc markdown">
@@ -106,9 +106,9 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; save(Creds creds, String collectionName, List&lt;Map&lt;String, dynamic&gt;&gt; values) async {
+      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; save(String dbID, String collectionName, List&lt;Map&lt;String, dynamic&gt;&gt; values) async {
   final request = SaveRequest();
-  request.credentials = creds.grpcObject();
+  request.dbID = base64.decode(dbID);
   request.collectionName = collectionName;
   for (var i=0; i&lt;values.length; i++) {
     final valString = json.encode(values[i]).toString();

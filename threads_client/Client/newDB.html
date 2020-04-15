@@ -97,23 +97,22 @@
     <section class="multi-line-signature">
       <span class="returntype">Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
             <span class="name ">newDB</span>
-(<wbr><span class="parameter" id="newDB-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span></span>)
+(<wbr><span class="parameter" id="newDB-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span>)
       
     </section>
     <section class="desc markdown">
       <p>Create a new DB with provided Credentials</p>
 <pre class="language-dart"><code class="language-dart">final client = threads.Client();
 final dbId = 'bafk7ayo2xuuafgx6ubbcn2lro3s7oixgujdda6shv4';
-final creds = threads.Creds.fromStrings(dbId);
-await client.newDB(creds);
+await client.newDB(dbId);
 </code></pre>
     </section>
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; newDB(Creds creds) async {
+      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; newDB(String dbID) async {
   final request = NewDBRequest();
-  request.credentials = creds.grpcObject();
+  request.dbID = base64.decode(dbID);
   await _stub.newDB(request);
   return;
 }</code></pre>

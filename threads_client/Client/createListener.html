@@ -97,7 +97,7 @@
     <section class="multi-line-signature">
       <span class="returntype">Stream<span class="signature">&lt;<wbr><span class="type-parameter"><a href="threads_client/ListenResult-class.html">ListenResult</a></span>&gt;</span></span>
             <span class="name ">createListener</span>
-(<wbr><span class="parameter" id="createListener-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span></span>)
+(<wbr><span class="parameter" id="createListener-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span>)
       
     </section>
     <section class="desc markdown">
@@ -106,10 +106,10 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Stream&lt;ListenResult&gt; createListener(Creds creds) {
+      <pre class="language-dart"><code class="language-dart">Stream&lt;ListenResult&gt; createListener(String dbID) {
   &#47;&#47; @todo: createListener seems to only handle a db ID here, whereas in js, more.
   final request = ListenRequest();
-  request.credentials = creds.grpcObject();
+  request.dbID = base64.decode(dbID);
   final typeTransform = StreamTransformer.fromHandlers(handleData: handleListenData);
   final stream = _stub.listen(request).transform(typeTransform);
   return stream;

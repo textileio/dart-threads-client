@@ -97,7 +97,7 @@
     <section class="multi-line-signature">
       <span class="returntype">Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
             <span class="name ">newCollection</span>
-(<wbr>{<span class="parameter" id="newCollection-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="newCollection-param-name"><span class="type-annotation">String</span> <span class="parameter-name">name</span></span> <span class="parameter" id="newCollection-param-schema"><span class="type-annotation">String</span> <span class="parameter-name">schema</span></span> })
+(<wbr>{<span class="parameter" id="newCollection-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span> <span class="parameter" id="newCollection-param-name"><span class="type-annotation">String</span> <span class="parameter-name">name</span></span> <span class="parameter" id="newCollection-param-schema"><span class="type-annotation">String</span> <span class="parameter-name">schema</span></span> })
       
     </section>
     <section class="desc markdown">
@@ -106,9 +106,9 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; newCollection({Creds creds, String name, String schema}) async {
+      <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; newCollection({String dbID, String name, String schema}) async {
   final request = NewCollectionRequest();
-  request.credentials = creds.grpcObject();
+  request.dbID = base64.decode(dbID);
   final collection = Collection(name, schema);
   request.config = collection.getConfig();
   await _stub.newCollection(request);

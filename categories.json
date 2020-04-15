@@ -27,15 +27,6 @@
     ]
   },
   {
-    "name": "Creds",
-    "qualifiedName": "threads_client.Creds",
-    "href": "threads_client/Creds-class.html",
-    "type": "class",
-    "categories": [
-      "Data Types"
-    ]
-  },
-  {
     "name": "Info",
     "qualifiedName": "threads_client.Info",
     "href": "threads_client/Info-class.html",
@@ -57,6 +48,15 @@
     "name": "Query",
     "qualifiedName": "threads_client.Query",
     "href": "threads_client/Query-class.html",
+    "type": "class",
+    "categories": [
+      "Data Types"
+    ]
+  },
+  {
+    "name": "ThreadID",
+    "qualifiedName": "threads_client.ThreadID",
+    "href": "threads_client/ThreadID-class.html",
     "type": "class",
     "categories": [
       "Data Types"

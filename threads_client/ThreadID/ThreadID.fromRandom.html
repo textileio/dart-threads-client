@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the ThreadID.fromRandom constructor from the Class ThreadID class from the threads_client library, for the Dart programming language.">
+  <title>ThreadID.fromRandom constructor - ThreadID class - threads_client library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="../..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+  <!-- header placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">threads_client</a></li>
+    <li><a href="threads_client/threads_client-library.html">threads_client</a></li>
+    <li><a href="threads_client/ThreadID-class.html">ThreadID</a></li>
+    <li class="self-crumb">ThreadID.fromRandom constructor</li>
+  </ol>
+  <div class="self-name">ThreadID.fromRandom</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="index.html">threads_client</a></li>
+      <li><a href="threads_client/threads_client-library.html">threads_client</a></li>
+      <li><a href="threads_client/ThreadID-class.html">ThreadID</a></li>
+      <li class="self-crumb">ThreadID.fromRandom constructor</li>
+    </ol>
+    
+    <h5>ThreadID class</h5>
+    <ol>
+    
+      <li class="section-title"><a href="threads_client/ThreadID-class.html#constructors">Constructors</a></li>
+      <li><a href="threads_client/ThreadID/ThreadID.html">ThreadID</a></li>
+      <li><a href="threads_client/ThreadID/ThreadID.fromRandom.html">fromRandom</a></li>
+    
+      <li class="section-title inherited">
+        <a href="threads_client/ThreadID-class.html#instance-properties">Properties</a>
+      </li>
+      <li class="inherited"><a href="threads_client/ThreadID/hashCode.html">hashCode</a></li>
+      <li class="inherited"><a href="threads_client/ThreadID/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title"><a href="threads_client/ThreadID-class.html#instance-methods">Methods</a></li>
+      <li><a href="threads_client/ThreadID/toBytes.html">toBytes</a></li>
+      <li><a href="threads_client/ThreadID/toString.html">toString</a></li>
+      <li class="inherited"><a href="threads_client/ThreadID/noSuchMethod.html">noSuchMethod</a></li>
+    
+      <li class="section-title inherited"><a href="threads_client/ThreadID-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="threads_client/ThreadID/operator_equals.html">operator ==</a></li>
+    
+    
+    
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-left-->
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <div><h1><span class="kind-constructor">ThreadID.fromRandom</span> constructor</h1></div>
+
+    <section class="multi-line-signature">
+      
+      <span class="name ">ThreadID.fromRandom</span>(<wbr>{<span class="parameter" id="fromRandom-param-version"><span class="type-annotation">int</span> <span class="parameter-name">version</span>: <span class="default-value">0x01</span></span> <span class="parameter" id="fromRandom-param-variant"><span class="type-annotation">int</span> <span class="parameter-name">variant</span>: <span class="default-value">0x55</span></span> <span class="parameter" id="fromRandom-param-size"><span class="type-annotation">int</span> <span class="parameter-name">size</span>: <span class="default-value">32</span></span> })
+    </section>
+
+    <section class="desc markdown">
+      <p>fromRandom creates a new random ID object.
+variant is the Thread variant to use. @see Variant
+size is the size of the random component to use. Defaults to 32 bytes.</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">ThreadID.fromRandom({int version = 0x01, int variant = 0x55, int size = 32}) {
+  &#47;&#47; two 8 bytes (max) numbers plus random bytes
+  final bytes = [version, variant];
+  bytes.addAll(List&lt;int&gt;.generate(size, (i) =&gt; Random().nextInt(256)));
+  _bytes = bytes;
+}</code></pre>
+    </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    threads_client
+      0.1.9
+  </span>
+
+  <!-- footer-text placeholder -->
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- footer placeholder -->
+
+</body>
+
+</html>

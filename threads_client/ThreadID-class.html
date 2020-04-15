@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the ThreadID class from the threads_client library, for the Dart programming language.">
+  <title>ThreadID class - threads_client library - Dart API</title>
+  <!-- required because all the links are pseudo-absolute -->
+  <base href="..">
+
+  <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:500,400i,400,300|Source+Sans+Pro:400,300,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="static-assets/github.css">
+  <link rel="stylesheet" href="static-assets/styles.css">
+  <link rel="icon" href="static-assets/favicon.png">
+  <!-- header placeholder -->
+</head>
+
+<body>
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="index.html">threads_client</a></li>
+    <li><a href="threads_client/threads_client-library.html">threads_client</a></li>
+    <li class="self-crumb">ThreadID class</li>
+  </ol>
+  <div class="self-name">ThreadID</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+  <div id="dartdoc-sidebar-left" class="col-xs-6 col-sm-3 col-md-2 sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+      <form class="search-sidebar" role="search">
+        <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+      </form>
+    </header>
+    
+    <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+      <li><a href="index.html">threads_client</a></li>
+      <li><a href="threads_client/threads_client-library.html">threads_client</a></li>
+      <li class="self-crumb">ThreadID class</li>
+    </ol>
+    
+    <h5>threads_client library</h5>
+    <ol>
+      <li class="section-title"><a href="threads_client/threads_client-library.html#classes">Classes</a></li>
+      <li><a href="threads_client/Client-class.html">Client</a></li>
+      <li><a href="threads_client/Collection-class.html">Collection</a></li>
+      <li><a href="threads_client/Config-class.html">Config</a></li>
+      <li><a href="threads_client/Info-class.html">Info</a></li>
+      <li><a href="threads_client/ListenResult-class.html">ListenResult</a></li>
+      <li><a href="threads_client/Query-class.html">Query</a></li>
+      <li><a href="threads_client/ThreadID-class.html">ThreadID</a></li>
+    
+    
+    
+    
+    
+    
+    
+    
+    </ol>
+  </div>
+
+  <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
+      <div><h1><span class="kind-class">ThreadID</span> class   <span class="category data-types cp-1 " title="This is part of the Data Types Topic.">Data&nbsp;Types</span>
+</h1></div>
+
+    <section class="desc markdown">
+      <p>ThreadID represents a self-describing Thread identifier.
+It is formed by a version, a variant, and a random number of a given length.</p>
+    </section>
+    
+
+    <section class="summary offset-anchor" id="constructors">
+      <h2>Constructors</h2>
+
+      <dl class="constructor-summary-list">
+        <dt id="ThreadID" class="callable">
+          <span class="name"><a href="threads_client/ThreadID/ThreadID.html">ThreadID</a></span><span class="signature">(<span class="parameter" id="-param-_bytes"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">int</span>&gt;</span></span> <span class="parameter-name">_bytes</span></span>)</span>
+        </dt>
+        <dd>
+          
+        </dd>
+        <dt id="ThreadID.fromRandom" class="callable">
+          <span class="name"><a href="threads_client/ThreadID/ThreadID.fromRandom.html">ThreadID.fromRandom</a></span><span class="signature">({<span class="parameter" id="fromRandom-param-version"><span class="type-annotation">int</span> <span class="parameter-name">version</span>: <span class="default-value">0x01</span></span> <span class="parameter" id="fromRandom-param-variant"><span class="type-annotation">int</span> <span class="parameter-name">variant</span>: <span class="default-value">0x55</span></span> <span class="parameter" id="fromRandom-param-size"><span class="type-annotation">int</span> <span class="parameter-name">size</span>: <span class="default-value">32</span></span> })</span>
+        </dt>
+        <dd>
+          fromRandom creates a new random ID object.
+variant is the Thread variant to use. @see Variant
+size is the size of the random component to use. Defaults to 32 bytes.
+        </dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor inherited" id="instance-properties">
+      <h2>Properties</h2>
+
+      <dl class="properties">
+        <dt id="hashCode" class="property inherited">
+          <span class="name"><a href="threads_client/ThreadID/hashCode.html">hashCode</a></span>
+          <span class="signature">&#8594; int</span>         
+        </dt>
+        <dd class="inherited">
+          The hash code for this object. <a href="threads_client/ThreadID/hashCode.html">[...]</a>
+                  <div class="features">read-only, inherited</div>
+</dd>
+        <dt id="runtimeType" class="property inherited">
+          <span class="name"><a href="threads_client/ThreadID/runtimeType.html">runtimeType</a></span>
+          <span class="signature">&#8594; Type</span>         
+        </dt>
+        <dd class="inherited">
+          A representation of the runtime type of the object.
+                  <div class="features">read-only, inherited</div>
+</dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor" id="instance-methods">
+      <h2>Methods</h2>
+      <dl class="callables">
+        <dt id="toBytes" class="callable">
+          <span class="name"><a href="threads_client/ThreadID/toBytes.html">toBytes</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; List<span class="signature">&lt;<wbr><span class="type-parameter">int</span>&gt;</span></span>
+          </span>
+                  </dt>
+        <dd>
+          toBytes returns the byte representation of an ID.
+                  
+</dd>
+        <dt id="toString" class="callable">
+          <span class="name"><a href="threads_client/ThreadID/toString.html">toString</a></span><span class="signature">(<wbr>)
+            <span class="returntype parameter">&#8594; String</span>
+          </span>
+                  </dt>
+        <dd>
+          toString returns the (multibase encoded) string representation of an ID.
+                  <div class="features">override</div>
+</dd>
+        <dt id="noSuchMethod" class="callable inherited">
+          <span class="name"><a href="threads_client/ThreadID/noSuchMethod.html">noSuchMethod</a></span><span class="signature">(<wbr><span class="parameter" id="noSuchMethod-param-invocation"><span class="type-annotation">Invocation</span> <span class="parameter-name">invocation</span></span>)
+            <span class="returntype parameter">&#8594; dynamic</span>
+          </span>
+                  </dt>
+        <dd class="inherited">
+          Invoked when a non-existent method or property is accessed. <a href="threads_client/ThreadID/noSuchMethod.html">[...]</a>
+                  <div class="features">inherited</div>
+</dd>
+      </dl>
+    </section>
+
+    <section class="summary offset-anchor inherited" id="operators">
+      <h2>Operators</h2>
+      <dl class="callables">
+        <dt id="operator ==" class="callable inherited">
+          <span class="name"><a href="threads_client/ThreadID/operator_equals.html">operator ==</a></span><span class="signature">(<wbr><span class="parameter" id="==-param-other"><span class="type-annotation">dynamic</span> <span class="parameter-name">other</span></span>)
+            <span class="returntype parameter">&#8594; bool</span>
+          </span>
+                  </dt>
+        <dd class="inherited">
+          The equality operator. <a href="threads_client/ThreadID/operator_equals.html">[...]</a>
+                  <div class="features">inherited</div>
+</dd>
+      </dl>
+    </section>
+
+
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-right" class="col-xs-6 col-sm-6 col-md-2 sidebar sidebar-offcanvas-right">
+    <ol>
+    
+      <li class="section-title"><a href="threads_client/ThreadID-class.html#constructors">Constructors</a></li>
+      <li><a href="threads_client/ThreadID/ThreadID.html">ThreadID</a></li>
+      <li><a href="threads_client/ThreadID/ThreadID.fromRandom.html">fromRandom</a></li>
+    
+      <li class="section-title inherited">
+        <a href="threads_client/ThreadID-class.html#instance-properties">Properties</a>
+      </li>
+      <li class="inherited"><a href="threads_client/ThreadID/hashCode.html">hashCode</a></li>
+      <li class="inherited"><a href="threads_client/ThreadID/runtimeType.html">runtimeType</a></li>
+    
+      <li class="section-title"><a href="threads_client/ThreadID-class.html#instance-methods">Methods</a></li>
+      <li><a href="threads_client/ThreadID/toBytes.html">toBytes</a></li>
+      <li><a href="threads_client/ThreadID/toString.html">toString</a></li>
+      <li class="inherited"><a href="threads_client/ThreadID/noSuchMethod.html">noSuchMethod</a></li>
+    
+      <li class="section-title inherited"><a href="threads_client/ThreadID-class.html#operators">Operators</a></li>
+      <li class="inherited"><a href="threads_client/ThreadID/operator_equals.html">operator ==</a></li>
+    
+    
+    
+    
+    </ol>
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    threads_client
+      0.1.9
+  </span>
+
+  <!-- footer-text placeholder -->
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="static-assets/typeahead.bundle.min.js"></script>
+<script src="static-assets/highlight.pack.js"></script>
+<script src="static-assets/URI.js"></script>
+<script src="static-assets/script.js"></script>
+<!-- footer placeholder -->
+
+</body>
+
+</html>

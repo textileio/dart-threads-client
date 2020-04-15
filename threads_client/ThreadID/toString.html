@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
-  <meta name="description" content="API docs for the signature property from the Creds class, for the Dart programming language.">
-  <title>signature property - Creds class - threads_client library - Dart API</title>
+  <meta name="description" content="API docs for the toString method from the ThreadID class, for the Dart programming language.">
+  <title>toString method - ThreadID class - threads_client library - Dart API</title>
   <!-- required because all the links are pseudo-absolute -->
   <base href="../..">
 
@@ -26,10 +26,10 @@
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="index.html">threads_client</a></li>
     <li><a href="threads_client/threads_client-library.html">threads_client</a></li>
-    <li><a href="threads_client/Creds-class.html">Creds</a></li>
-    <li class="self-crumb">signature property</li>
+    <li><a href="threads_client/ThreadID-class.html">ThreadID</a></li>
+    <li class="self-crumb">toString method</li>
   </ol>
-  <div class="self-name">signature</div>
+  <div class="self-name">toString</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
@@ -47,33 +47,30 @@
     <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
       <li><a href="index.html">threads_client</a></li>
       <li><a href="threads_client/threads_client-library.html">threads_client</a></li>
-      <li><a href="threads_client/Creds-class.html">Creds</a></li>
-      <li class="self-crumb">signature property</li>
+      <li><a href="threads_client/ThreadID-class.html">ThreadID</a></li>
+      <li class="self-crumb">toString method</li>
     </ol>
     
-    <h5>Creds class</h5>
+    <h5>ThreadID class</h5>
     <ol>
     
-        <li class="section-title"><a href="threads_client/Creds-class.html#constructors">Constructors</a></li>
-        <li><a href="threads_client/Creds/Creds.html">Creds</a></li>
-        <li><a href="threads_client/Creds/Creds.fromStrings.html">fromStrings</a></li>
+        <li class="section-title"><a href="threads_client/ThreadID-class.html#constructors">Constructors</a></li>
+        <li><a href="threads_client/ThreadID/ThreadID.html">ThreadID</a></li>
+        <li><a href="threads_client/ThreadID/ThreadID.fromRandom.html">fromRandom</a></li>
     
-        <li class="section-title">
-            <a href="threads_client/Creds-class.html#instance-properties">Properties</a>
+        <li class="section-title inherited">
+            <a href="threads_client/ThreadID-class.html#instance-properties">Properties</a>
         </li>
-        <li><a href="threads_client/Creds/DBID.html">DBID</a></li>
-        <li><a href="threads_client/Creds/pubKey.html">pubKey</a></li>
-        <li><a href="threads_client/Creds/signature.html">signature</a></li>
-        <li class="inherited"><a href="threads_client/Creds/hashCode.html">hashCode</a></li>
-        <li class="inherited"><a href="threads_client/Creds/runtimeType.html">runtimeType</a></li>
+        <li class="inherited"><a href="threads_client/ThreadID/hashCode.html">hashCode</a></li>
+        <li class="inherited"><a href="threads_client/ThreadID/runtimeType.html">runtimeType</a></li>
     
-        <li class="section-title"><a href="threads_client/Creds-class.html#instance-methods">Methods</a></li>
-        <li><a href="threads_client/Creds/grpcObject.html">grpcObject</a></li>
-        <li class="inherited"><a href="threads_client/Creds/noSuchMethod.html">noSuchMethod</a></li>
-        <li class="inherited"><a href="threads_client/Creds/toString.html">toString</a></li>
+        <li class="section-title"><a href="threads_client/ThreadID-class.html#instance-methods">Methods</a></li>
+        <li><a href="threads_client/ThreadID/toBytes.html">toBytes</a></li>
+        <li><a href="threads_client/ThreadID/toString.html">toString</a></li>
+        <li class="inherited"><a href="threads_client/ThreadID/noSuchMethod.html">noSuchMethod</a></li>
     
-        <li class="section-title inherited"><a href="threads_client/Creds-class.html#operators">Operators</a></li>
-        <li class="inherited"><a href="threads_client/Creds/operator_equals.html">operator ==</a></li>
+        <li class="section-title inherited"><a href="threads_client/ThreadID-class.html#operators">Operators</a></li>
+        <li class="inherited"><a href="threads_client/ThreadID/operator_equals.html">operator ==</a></li>
     
     
     
@@ -83,22 +80,24 @@
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-main-content" class="col-xs-12 col-sm-9 col-md-8 main-content">
-      <div><h1><span class="kind-property">signature</span> property</h1></div>
+      <div><h1><span class="kind-method">toString</span> method</h1></div>
 
-        <section class="multi-line-signature">
-          <span class="returntype">List<span class="signature">&lt;<wbr><span class="type-parameter">int</span>&gt;</span></span>
-          <span class="name ">signature</span>
-          <div class="features">read / write</div>
-        </section>
-        <section class="desc markdown">
-          <p>The signature as a byte array</p>
-        </section>
-                <section class="summary source-code" id="source">
-          <h2><span>Implementation</span></h2>
-          <pre class="language-dart"><code class="language-dart">List&lt;int&gt; signature
-
-</code></pre>
-        </section>
+    <section class="multi-line-signature">
+      <span class="returntype">String</span>
+            <span class="name ">toString</span>
+(<wbr>)
+      <div class="features">override</div>
+    </section>
+    <section class="desc markdown">
+      <p>toString returns the (multibase encoded) string representation of an ID.</p>
+    </section>
+    
+    <section class="summary source-code" id="source">
+      <h2><span>Implementation</span></h2>
+      <pre class="language-dart"><code class="language-dart">String toString() {
+  return base64.encode(_bytes);
+}</code></pre>
+    </section>
 
   </div> <!-- /.main-content -->
 

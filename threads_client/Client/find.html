@@ -97,7 +97,7 @@
     <section class="multi-line-signature">
       <span class="returntype">Future<span class="signature">&lt;<wbr><span class="type-parameter">List<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>&gt;</span></span>
             <span class="name ">find</span>
-(<wbr><span class="parameter" id="find-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="find-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="find-param-query"><span class="type-annotation"><a href="threads_client/Query-class.html">Query</a></span> <span class="parameter-name">query</span></span>)
+(<wbr><span class="parameter" id="find-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span>, </span> <span class="parameter" id="find-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="find-param-query"><span class="type-annotation"><a href="threads_client/Query-class.html">Query</a></span> <span class="parameter-name">query</span></span>)
       
     </section>
     <section class="desc markdown">
@@ -106,9 +106,9 @@
     
     <section class="summary source-code" id="source">
       <h2><span>Implementation</span></h2>
-      <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;Map&lt;String, dynamic&gt;&gt;&gt; find(Creds creds, String collectionName, Query query) async {
+      <pre class="language-dart"><code class="language-dart">Future&lt;List&lt;Map&lt;String, dynamic&gt;&gt;&gt; find(String dbID, String collectionName, Query query) async {
   final request = FindRequest();
-  request.credentials = creds.grpcObject();
+  request.dbID = base64.decode(dbID);
   request.collectionName = collectionName;
   request.queryJSON = utf8.encode(json.encode(query.toJson()));
   final response = await _stub.find(request);

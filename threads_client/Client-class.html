@@ -55,10 +55,10 @@
       <li><a href="threads_client/Client-class.html">Client</a></li>
       <li><a href="threads_client/Collection-class.html">Collection</a></li>
       <li><a href="threads_client/Config-class.html">Config</a></li>
-      <li><a href="threads_client/Creds-class.html">Creds</a></li>
       <li><a href="threads_client/Info-class.html">Info</a></li>
       <li><a href="threads_client/ListenResult-class.html">ListenResult</a></li>
       <li><a href="threads_client/Query-class.html">Query</a></li>
+      <li><a href="threads_client/ThreadID-class.html">ThreadID</a></li>
     
     
     
@@ -78,8 +78,7 @@
       <p>API Client to the remote Thread daemon</p>
 <pre class="language-dart"><code class="language-dart">final client = threads.Client();
 final dbId = 'bafk7ayo2xuuafgx6ubbcn2lro3s7oixgujdda6shv4';
-final creds = threads.Creds.fromStrings(dbId);
-await client.newDB(creds);
+await client.newDB(dbId);
 </code></pre>
     </section>
     
@@ -124,7 +123,7 @@ await client.newDB(creds);
       <h2>Methods</h2>
       <dl class="callables">
         <dt id="create" class="callable">
-          <span class="name"><a href="threads_client/Client/create.html">create</a></span><span class="signature">(<wbr><span class="parameter" id="create-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="create-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="create-param-values"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">values</span></span>)
+          <span class="name"><a href="threads_client/Client/create.html">create</a></span><span class="signature">(<wbr><span class="parameter" id="create-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span>, </span> <span class="parameter" id="create-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="create-param-values"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">values</span></span>)
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">List<span class="signature">&lt;<wbr><span class="type-parameter">String</span>&gt;</span></span>&gt;</span></span>
           </span>
                   </dt>
@@ -133,7 +132,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="createListener" class="callable">
-          <span class="name"><a href="threads_client/Client/createListener.html">createListener</a></span><span class="signature">(<wbr><span class="parameter" id="createListener-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span></span>)
+          <span class="name"><a href="threads_client/Client/createListener.html">createListener</a></span><span class="signature">(<wbr><span class="parameter" id="createListener-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span>)
             <span class="returntype parameter">&#8594; Stream<span class="signature">&lt;<wbr><span class="type-parameter"><a href="threads_client/ListenResult-class.html">ListenResult</a></span>&gt;</span></span>
           </span>
                   </dt>
@@ -142,7 +141,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="delete" class="callable">
-          <span class="name"><a href="threads_client/Client/delete.html">delete</a></span><span class="signature">(<wbr><span class="parameter" id="delete-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="delete-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="delete-param-instanceIDs"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">String</span>&gt;</span></span> <span class="parameter-name">instanceIDs</span></span>)
+          <span class="name"><a href="threads_client/Client/delete.html">delete</a></span><span class="signature">(<wbr><span class="parameter" id="delete-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span>, </span> <span class="parameter" id="delete-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="delete-param-instanceIDs"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">String</span>&gt;</span></span> <span class="parameter-name">instanceIDs</span></span>)
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
           </span>
                   </dt>
@@ -151,7 +150,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="find" class="callable">
-          <span class="name"><a href="threads_client/Client/find.html">find</a></span><span class="signature">(<wbr><span class="parameter" id="find-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="find-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="find-param-query"><span class="type-annotation"><a href="threads_client/Query-class.html">Query</a></span> <span class="parameter-name">query</span></span>)
+          <span class="name"><a href="threads_client/Client/find.html">find</a></span><span class="signature">(<wbr><span class="parameter" id="find-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span>, </span> <span class="parameter" id="find-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="find-param-query"><span class="type-annotation"><a href="threads_client/Query-class.html">Query</a></span> <span class="parameter-name">query</span></span>)
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">List<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>&gt;</span></span>
           </span>
                   </dt>
@@ -160,7 +159,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="findById" class="callable">
-          <span class="name"><a href="threads_client/Client/findById.html">findById</a></span><span class="signature">(<wbr><span class="parameter" id="findById-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="findById-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span></span> <span class="parameter" id="findById-param-instanceID"><span class="type-annotation">String</span> <span class="parameter-name">instanceID</span></span>)
+          <span class="name"><a href="threads_client/Client/findById.html">findById</a></span><span class="signature">(<wbr><span class="parameter" id="findById-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span> <span class="parameter" id="findById-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span></span> <span class="parameter" id="findById-param-instanceID"><span class="type-annotation">String</span> <span class="parameter-name">instanceID</span></span>)
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span>
           </span>
                   </dt>
@@ -169,7 +168,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="getDBInfo" class="callable">
-          <span class="name"><a href="threads_client/Client/getDBInfo.html">getDBInfo</a></span><span class="signature">(<wbr><span class="parameter" id="getDBInfo-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span></span>)
+          <span class="name"><a href="threads_client/Client/getDBInfo.html">getDBInfo</a></span><span class="signature">(<wbr><span class="parameter" id="getDBInfo-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span>)
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter"><a href="threads_client/Info-class.html">Info</a></span>&gt;</span></span>
           </span>
                   </dt>
@@ -178,7 +177,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="has" class="callable">
-          <span class="name"><a href="threads_client/Client/has.html">has</a></span><span class="signature">(<wbr><span class="parameter" id="has-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="has-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="has-param-instanceIDs"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">String</span>&gt;</span></span> <span class="parameter-name">instanceIDs</span></span>)
+          <span class="name"><a href="threads_client/Client/has.html">has</a></span><span class="signature">(<wbr><span class="parameter" id="has-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span>, </span> <span class="parameter" id="has-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="has-param-instanceIDs"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">String</span>&gt;</span></span> <span class="parameter-name">instanceIDs</span></span>)
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">bool</span>&gt;</span></span>
           </span>
                   </dt>
@@ -187,7 +186,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="newCollection" class="callable">
-          <span class="name"><a href="threads_client/Client/newCollection.html">newCollection</a></span><span class="signature">(<wbr>{<span class="parameter" id="newCollection-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="newCollection-param-name"><span class="type-annotation">String</span> <span class="parameter-name">name</span></span> <span class="parameter" id="newCollection-param-schema"><span class="type-annotation">String</span> <span class="parameter-name">schema</span></span> })
+          <span class="name"><a href="threads_client/Client/newCollection.html">newCollection</a></span><span class="signature">(<wbr>{<span class="parameter" id="newCollection-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span> <span class="parameter" id="newCollection-param-name"><span class="type-annotation">String</span> <span class="parameter-name">name</span></span> <span class="parameter" id="newCollection-param-schema"><span class="type-annotation">String</span> <span class="parameter-name">schema</span></span> })
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
           </span>
                   </dt>
@@ -196,7 +195,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="newDB" class="callable">
-          <span class="name"><a href="threads_client/Client/newDB.html">newDB</a></span><span class="signature">(<wbr><span class="parameter" id="newDB-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span></span>)
+          <span class="name"><a href="threads_client/Client/newDB.html">newDB</a></span><span class="signature">(<wbr><span class="parameter" id="newDB-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span></span>)
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
           </span>
                   </dt>
@@ -205,7 +204,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="newDBFromAddr" class="callable">
-          <span class="name"><a href="threads_client/Client/newDBFromAddr.html">newDBFromAddr</a></span><span class="signature">(<wbr>{<span class="parameter" id="newDBFromAddr-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="newDBFromAddr-param-address"><span class="type-annotation">String</span> <span class="parameter-name">address</span>, </span> <span class="parameter" id="newDBFromAddr-param-key"><span class="type-annotation">String</span> <span class="parameter-name">key</span>, </span> <span class="parameter" id="newDBFromAddr-param-collections"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="threads_client/Collection-class.html">Collection</a></span>&gt;</span></span> <span class="parameter-name">collections</span></span> })
+          <span class="name"><a href="threads_client/Client/newDBFromAddr.html">newDBFromAddr</a></span><span class="signature">(<wbr>{<span class="parameter" id="newDBFromAddr-param-address"><span class="type-annotation">String</span> <span class="parameter-name">address</span>, </span> <span class="parameter" id="newDBFromAddr-param-key"><span class="type-annotation">String</span> <span class="parameter-name">key</span>, </span> <span class="parameter" id="newDBFromAddr-param-collections"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter"><a href="threads_client/Collection-class.html">Collection</a></span>&gt;</span></span> <span class="parameter-name">collections</span></span> })
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
           </span>
                   </dt>
@@ -223,7 +222,7 @@ await client.newDB(creds);
                   
 </dd>
         <dt id="save" class="callable">
-          <span class="name"><a href="threads_client/Client/save.html">save</a></span><span class="signature">(<wbr><span class="parameter" id="save-param-creds"><span class="type-annotation"><a href="threads_client/Creds-class.html">Creds</a></span> <span class="parameter-name">creds</span>, </span> <span class="parameter" id="save-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="save-param-values"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">values</span></span>)
+          <span class="name"><a href="threads_client/Client/save.html">save</a></span><span class="signature">(<wbr><span class="parameter" id="save-param-dbID"><span class="type-annotation">String</span> <span class="parameter-name">dbID</span>, </span> <span class="parameter" id="save-param-collectionName"><span class="type-annotation">String</span> <span class="parameter-name">collectionName</span>, </span> <span class="parameter" id="save-param-values"><span class="type-annotation">List<span class="signature">&lt;<wbr><span class="type-parameter">Map<span class="signature">&lt;<wbr><span class="type-parameter">String</span>, <span class="type-parameter">dynamic</span>&gt;</span></span>&gt;</span></span> <span class="parameter-name">values</span></span>)
             <span class="returntype parameter">&#8594; Future<span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
           </span>
                   </dt>
