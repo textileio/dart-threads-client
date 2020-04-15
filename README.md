@@ -15,6 +15,7 @@ Join us on our [public Slack channel](https://slack.textile.io/) for news, discu
 ## Table of Contents
 
 -   [Getting Started](#getting_started)
+-   [Usage](#Usage)
 -   [Development](#development)
 -   [Contributing](#contributing)
 -   [Changelog](#changelog)
@@ -24,15 +25,21 @@ Join us on our [public Slack channel](https://slack.textile.io/) for news, discu
 
 In the `pubspec.yaml` of your project, add the following dependency:
 
-_See latest version in badge at top of README._
-
 ```
 dependencies:
   ...
   threads_client: "^0.x.x"
 ```
 
-### Run Threads Daemon
+### Connect to a Threads Daemon
+
+You can use Textile's hosted daemons or run your own.
+
+##### Use hosted Threads
+
+[Textile Threads](https://github.com/textileio/dart-textile).
+
+##### Run your own daemon
 
 You need to run a threads daemon available to the client.
 
@@ -42,51 +49,24 @@ cd go-threads
 go run threadsd/main.go -debug
 ```
 
-### Usage
-
-You can see complete usage examples in the provided test suite:
-
-[https://github.com/textileio/dart-threads-client/blob/master/test/threads_client.dart#L41](https://github.com/textileio/dart-threads-client/blob/master/test/threads_client.dart)
-
-## Development
-
-### Install
-
-Run the daemon, as above. Next, install and run the Dart `threads_client`:
-
-```sh
-git clone git@github.com:textileio/dart-threads-client.git
-cd dart-threads-client
-pub get
-```
-
-### Run tests
-
-```sh
-dart test/threads_client_test.dart
-```
-
-### Run example
-
-```sh
-dart examples/helloworld.dart
-```
-
 ## Usage
 
-## Start Client & Create a Store
+[Read the Complete API Documentation](https://textileio.github.io/dart-threads-client/threads_client/threads_client-library.html).
+
+### Create a DB
 
 ```dart
 import 'package:threads_client/threads_client.dart' as threads;
 
 void main(List<String> args) async {
   final client = threads.Client();
-  final store = await client.newStore();
-  print('New store $store');
+  final dbId = 'bafk7ayo2xuuafgx6ubbcn2lro3s7oixgujdda6shv4';
+  final creds = threads.Creds.fromStrings(dbId);
+  await client.newDB(creds);
 }
 ```
 
-## Run Threads using hosted Textile API
+### Run Threads using hosted Textile API
 
 ```dart
 import 'package:textile/textile.dart' as textile;
@@ -98,8 +78,9 @@ const DEVICE_ID = '<uuid>';
 void main(List<String> args) async {
   final config = textile.ThreadsConfig(APP_TOKEN, DEVICE_ID);
   final client = threads.Client(config: config);
-  final store = await client.newStore();
-  print('New store $store');
+  final dbId = 'bafk7ayo2xuuafgx6ubbcn2lro3s7oixgujdda6shv4';
+  final creds = threads.Creds.fromStrings(dbId);
+  await client.newDB(creds);
 }
 ```
 
@@ -123,6 +104,30 @@ For example, add a custom auth token to the header of each request.
     );
     // Create a new threads client
     client = Client(config);
+```
+
+## Development
+
+### Install
+
+Run the daemon, as above. Next, install and run the Dart `threads_client`:
+
+```sh
+git clone git@github.com:textileio/dart-threads-client.git
+cd dart-threads-client
+pub get
+```
+
+### Run tests
+
+```sh
+dart test/threads_client_test.dart
+```
+
+### Run example
+
+```sh
+dart examples/helloworld.dart
 ```
 
 ## Contributing

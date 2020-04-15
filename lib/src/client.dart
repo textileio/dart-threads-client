@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:protobuf/protobuf.dart';
+import 'package:threads_client/threads_client.dart';
 import 'package:uuid/uuid.dart';
 import 'package:grpc/grpc.dart';
 import 'package:threads_client_grpc/api.pbgrpc.dart';
@@ -9,160 +10,170 @@ import 'config.dart';
 import 'models.dart';
 import 'utils.dart';
 
+/// API Client to the remote Thread daemon
+/// {@category API}
+/// 
+/// {@example examples/helloworld.dart}
 class Client {
-  Uuid uuid;
+  APIClient _stub;
+  ClientChannel _channel;
+  String _host;
+  int _port;
+  Uuid _uuid;
 
-  ClientChannel channel;
-  APIClient stub;
-  String host;
-  int port;
-
+  /// Create a new Client with given config
   Client({Config config}) {
-    uuid = Uuid();
+    _uuid = Uuid();
     if (config == null) {
       config = Config();
     }
-    host = config.host;
-    port = config.port;
-    channel = ClientChannel(host,
-        port: port,
+    _host = config.host;
+    _port = config.port;
+    _channel = ClientChannel(_host,
+        port: _port,
         options:
           ChannelOptions(credentials: config.credentials));
-        stub = APIClient(
-          channel,
+        _stub = APIClient(
+          _channel,
           options: config.getCallOptions()
         );
   }
 
-  Future<String> newStore() async {
-    final store = await stub.newStore(NewStoreRequest());
-    return store.getField(1);
-  }
-
-  Future<void> registerSchema({String storeID, String name, String schema}) async {
-    final request = RegisterSchemaRequest();  
-    request.storeID = storeID;
-    request.name = name;
-    request.schema = schema;
-    await stub.registerSchema(request);
+  /// Create a new DB with provided Credentials
+  /// 
+  /// {@example examples/helloworld.dart}
+  Future<void> newDB(String dbID) async {
+    final request = NewDBRequest();
+    request.dbID = base64.decode(dbID);
+    await _stub.newDB(request);
     return;
   }
 
-  Future<void> start(String storeID) async {
-    final request = StartRequest();
-    request.storeID = storeID;
-    await stub.start(request);
+  /// Create a new collection in the DB
+  Future<void> newCollection({String dbID, String name, String schema}) async {
+    final request = NewCollectionRequest();
+    request.dbID = base64.decode(dbID);
+    final collection = Collection(name, schema);
+    request.config = collection.getConfig();
+    await _stub.newCollection(request);
     return;
   }
 
-  Future<void> startFromAddress({String storeID, String address, String followKey, String readKey}) async {
-    final request = StartFromAddressRequest();  
-    if (storeID != null) {
-      request.storeID = storeID;
+  /// Join a DB from a remote address
+  Future<void> newDBFromAddr({String address, String key, List<Collection> collections}) async {
+    final request = NewDBFromAddrRequest();
+    request.addr = base64.decode(address);
+    if (key != null) {
+      request.key = base64.decode(key);
     }
-    if (address != null) {
-      request.address = address;
-    }
-    if (followKey != null) {
-      request.followKey = base64.decode(followKey);
-    }
-    if (readKey != null) {
-      request.readKey = base64.decode(readKey);
-    }
-    await stub.startFromAddress(request);
+    request.collections.addAll(
+      collections.map((c) => c.getConfig())
+    );
+    await _stub.newDBFromAddr(request);
     return;
   }
 
-  Future<StoreLinks> getStoreLink(String storeID) async {
-    final request = GetStoreLinkRequest();
-    request.storeID = storeID;
-    final output = await stub.getStoreLink(request);
-    final response = StoreLinks(
-      output.addresses,
-      base64.encode(output.followKey),
-      base64.encode(output.readKey)
+  /// Get the DB's address & key information
+  Future<Info> getDBInfo(String dbID) async {
+    final request = GetDBInfoRequest();
+    request.dbID = base64.decode(dbID);
+    final output = await _stub.getDBInfo(request);
+    final response = Info(
+      output.addrs.map((addr) => base64.encode(addr)).toList(),
+      base64.encode(output.key)
     );
     return response;
   }
 
-  Future<List<Map<String,dynamic>>> modelCreate(String storeID, String modelName, List<Map<String, dynamic>> values) async {
-    final request = ModelCreateRequest();  
-    request.storeID = storeID;
-    request.modelName = modelName;
+  /// Create a new instance(s) in the collection
+  /// 
+  /// {@example examples/create.dart}
+  Future<List<String>> create(String dbID, String collectionName, List<Map<String, dynamic>> values) async {
+    final request = CreateRequest();  
+    request.dbID = base64.decode(dbID);
+    request.collectionName = collectionName;
     for (var i=0; i<values.length; i++) {
-      values[i]['ID'] = uuid.v4();
+      if (!values[i].containsKey('ID')) {
+        values[i]['ID'] = _uuid.v4();
+      }
       final valString = json.encode(values[i]).toString();
-      request.values.add(valString);
+      request.instances.add(utf8.encode(valString));
     }
-    final response = await stub.modelCreate(request);
-    final entities = response.entities;
-
-    return List<Map<String,dynamic>>.from(entities.map((e) => json.decode(e)));
+    final response = await _stub.create(request);
+    return response.instanceIDs;
   }
 
-  Future<void> modelSave(String storeID, String modelName, List<Map<String, dynamic>> values) async {
-    final request = ModelSaveRequest();  
-    request.storeID = storeID;
-    request.modelName = modelName;
+  /// Save changes to an existing instance
+  Future<void> save(String dbID, String collectionName, List<Map<String, dynamic>> values) async {
+    final request = SaveRequest();  
+    request.dbID = base64.decode(dbID);
+    request.collectionName = collectionName;
     for (var i=0; i<values.length; i++) {
       final valString = json.encode(values[i]).toString();
-      request.values.add(valString);
+      request.instances.add(utf8.encode(valString));
     }
-    await stub.modelSave(request);
+    await _stub.save(request);
     return;
   }
 
-  Future<void> modelDelete(String storeID, String modelName, List<String> entityIDs) async {
-    final request = ModelDeleteRequest();  
-    request.storeID = storeID;
-    request.modelName = modelName;
-    for (var i=0; i<entityIDs.length; i++) {
-      request.entityIDs.add(entityIDs[i]);
+  /// Delete an existing instance
+  Future<void> delete(String dbID, String collectionName, List<String> instanceIDs) async {
+    final request = DeleteRequest();  
+    request.dbID = base64.decode(dbID);
+    request.collectionName = collectionName;
+    for (var i=0; i<instanceIDs.length; i++) {
+      request.instanceIDs.add(instanceIDs[i]);
     }
-    await stub.modelDelete(request);
+    await _stub.delete(request);
     return;
   }
 
-  Future<bool> modelHas(String storeID, String modelName, List<String> entityIDs) async {
-    final request = ModelHasRequest();  
-    request.storeID = storeID;
-    request.modelName = modelName;
-    for (var i=0; i<entityIDs.length; i++) {
-      request.entityIDs.add(entityIDs[i]);
+  /// Check if an instance exists in the given collection
+  Future<bool> has(String dbID, String collectionName, List<String> instanceIDs) async {
+    final request = HasRequest();  
+    request.dbID = base64.decode(dbID);
+    request.collectionName = collectionName;
+    for (var i=0; i<instanceIDs.length; i++) {
+      request.instanceIDs.add(instanceIDs[i]);
     }
-    final response = await stub.modelHas(request);
+    final response = await _stub.has(request);
     return response.getField(1);
   }
 
-  Future<Map<String, dynamic>> modelFindById(String storeID, String modelName, String entityID) async {
-    final request = ModelFindByIDRequest();  
-    request.storeID = storeID;
-    request.modelName = modelName;
-    request.entityID = entityID;
-    final response = await stub.modelFindByID(request);
-    return json.decode(response.getField(1));
+  /// Find and return an instance by ID
+  Future<Map<String, dynamic>> findById(String dbID, String collectionName, String instanceID) async {
+    final request = FindByIDRequest();  
+    request.dbID = base64.decode(dbID);
+    request.collectionName = collectionName;
+    request.instanceID = instanceID;
+    final response = await _stub.findByID(request);
+    final jsn = json.decode(utf8.decode(response.getField(1)));
+    return jsn;
   }
 
-  Future<List<Map<String, dynamic>>> modelFind(String storeID, String modelName, JSONQuery query) async {
-    final request = ModelFindRequest();  
-    request.storeID = storeID;
-    request.modelName = modelName;
+  /// Find any matching instance IDs by query
+  Future<List<Map<String, dynamic>>> find(String dbID, String collectionName, Query query) async {
+    final request = FindRequest();  
+    request.dbID = base64.decode(dbID);
+    request.collectionName = collectionName;
     request.queryJSON = utf8.encode(json.encode(query.toJson()));
-    final response = await stub.modelFind(request);
+    final response = await _stub.find(request);
     return List<Map<String, dynamic>>.from(
-      response.entities.map((et) => json.decode(utf8.decode(et)))
+      response.instances.map((et) => json.decode(utf8.decode(et)))
     );
   }
 
-  Stream<ListenResult> createListener(String storeID) {
-    // @todo: createListener seems to only handle a storeId here, whereas in js, more. 
+  /// Create an update stream
+  Stream<ListenResult> createListener(String dbID) {
+    // @todo: createListener seems to only handle a db ID here, whereas in js, more. 
     final request = ListenRequest();  
-    request.storeID = storeID;
+    request.dbID = base64.decode(dbID);
     final typeTransform = StreamTransformer.fromHandlers(handleData: handleListenData);
-    final stream = stub.listen(request).transform(typeTransform);
+    final stream = _stub.listen(request).transform(typeTransform);
     return stream;
   }
   
+  /// Create a read transaction steam
   ResponseStream<ReadTransactionReply> readTransaction(StreamController<GeneratedMessage> writer) {
     // Create transation input stream
     final controller = StreamController<ReadTransactionRequest>();
@@ -172,11 +183,12 @@ class Client {
     writer.stream.transform(transform).pipe(controller);
 
     // Register stream and get listener
-    final listener = stub.readTransaction(controller.stream);
+    final listener = _stub.readTransaction(controller.stream);
 
     return listener;
   }
 
+  /// Create a write transaction stream
   ResponseStream<WriteTransactionReply> writeTransaction(StreamController<GeneratedMessage> writer) {
     // Create transation input stream
     final controller = StreamController<WriteTransactionRequest>();
@@ -186,12 +198,13 @@ class Client {
     writer.stream.transform(transform).pipe(controller);
 
     // Register stream and get listener
-    final listener = stub.writeTransaction(controller.stream);
+    final listener = _stub.writeTransaction(controller.stream);
 
     return listener;
   }
 
+  /// Shut down the connection
   Future<void> shutdown() async {
-    await channel.terminate();
+    await _channel.terminate();
   }
 }

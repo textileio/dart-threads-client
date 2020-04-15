@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
+  base32:
+    dependency: "direct main"
+    description:
+      name: base32
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -71,6 +78,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.4"
+  cryptoutils:
+    dependency: "direct main"
+    description:
+      name: cryptoutils
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   csslib:
     dependency: transitive
     description:
@@ -364,7 +378,7 @@ packages:
       name: threads_client_grpc
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.9"
+    version: "0.1.13"
   typed_data:
     dependency: transitive
     description:

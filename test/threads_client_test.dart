@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:threads_client/threads_client.dart' as threads;
 import 'package:test/test.dart';
 
@@ -12,7 +13,7 @@ const personSchema = {
   'properties': {
     'ID': {
       'type': 'string',
-      'description': 'The entity\'s id.',
+      'description': 'The instance\'s id.',
     },
     'firstName': {
       'type': 'string',
@@ -32,14 +33,12 @@ const personSchema = {
 
 void main() async {
   threads.Client client;
-  String store;
-  String address;
-  String followKey;
-  String readKey;
-  String modelID;
+  final threadId = threads.ThreadID.fromRandom();
+  final dbID = threadId.toString();
   final env = Platform.environment;
   final newAge = 42;
-
+  String collectionID;
+  
   setUpAll(() {
     // // Thread client options
     final config = threads.Config(
@@ -54,56 +53,42 @@ void main() async {
     // Shutdown the threads client.
     await client.shutdown();
   });
-  test('Create & start a new data store', () async {
-    store = await client.newStore();
-    await client.start(store);
-    expect(store.length, 36);
+  test('Create new DB', () async {
+    await client.newDB(dbID);
   });
-  test('Register a schema for the new store', () async {
+  test('Register a schema for the new db', () async {
     final jsonData = JsonCodec().encode(personSchema);
     final jsonString = jsonData.toString();
-    await client.registerSchema(storeID: store, name: 'Person', schema: jsonString);
+    await client.newCollection(dbID: dbID, name: 'Person', schema: jsonString);
     expect(true, true);
   });
-  test('Get a link to invite others to the store', () async {
-    final link = await client.getStoreLink(store);
+  test('Get a link to invite others to the db', () async {
+    final link = await client.getDBInfo(dbID);
     expect(link.addresses.length, greaterThan(0));
-    address = link.addresses[0];
-    followKey = link.followKey;
-    readKey = link.readKey;
   });
-  test('Verify invite by starting from invite address', () async {
-    try {
-      await client.startFromAddress(storeID: store, address: address, followKey: followKey, readKey: readKey);
-      expect(true, true);
-    } catch (error) {
-      expect(error.toString(), '');
-    }
-  });
-  test('Create a new model in the store', () async {
+  test('Create a new model in the db', () async {
     final model = createPerson();
     try {
-      final response = await client.modelCreate(store, 'Person', [model.toJson()]);
+      final response = await client.create(dbID, 'Person', [model.toJson()]);
       expect(response.length, 1);
-      final output = Person.fromJson(response[0]);
-      modelID = output.ID;
+      collectionID = response[0];
       expect(true, true);
     } catch (error) {
       expect(error.toString(), '');
     }
   });
-  test('Update an existing model in the store', () async {
-    final model = createPerson(ID: modelID, age: newAge);
+  test('Update an existing model in the db', () async {
+    final model = createPerson(ID: collectionID, age: newAge);
     try {
-      await client.modelSave(store, 'Person', [model.toJson()]);
+      await client.save(dbID, 'Person', [model.toJson()]);
       expect(true, true);
     } catch (error) {
       expect(error.toString(), '');
     }
   });
-  test('Check if an ID exists in the store', () async {
+  test('Check if an ID exists in the db', () async {
     try {
-      final response = await client.modelHas(store, 'Person', [modelID]);
+      final response = await client.has(dbID, 'Person', [collectionID]);
       expect(response, true);
     } catch (error) {
       // fail if error
@@ -113,7 +98,7 @@ void main() async {
 
   test('Fetch a model by its ID', () async {
     try {
-      final response = await client.modelFindById(store, 'Person', modelID);
+      final response = await client.findById(dbID, 'Person', collectionID);
       final person = Person.fromJson(response);
       expect(person.age, newAge);
     } catch (error) {
@@ -122,9 +107,20 @@ void main() async {
     }
   });
 
-  test('Run an advanced query on store models', () async {
+  test('Fetch an unknown model ID should return null', () async {
     try {
-      final queryJSON = threads.JSONQuery.fromJson({
+      await client.findById(dbID, 'Person', 'xyz');
+      // should fail by here
+      expect(false, true);
+    } catch (error) {
+      // should error
+      expect(error.toString(), 'gRPC Error (2, instance not found)');
+    }
+  });
+
+  test('Run an advanced query on db models', () async {
+    try {
+      final queryJSON = threads.Query.fromJson({
         'ands': [{
             'fieldPath': 'firstName',
             'operation': 'Eq',
@@ -140,26 +136,26 @@ void main() async {
         'sort': { 'fieldPath': 'firstName', 'desc': true}
       });
       expect(queryJSON.ands, isNotEmpty);
-      await client.modelFind(store, 'Person', queryJSON);
+      await client.find(dbID, 'Person', queryJSON);
     } catch (error) {
       expect(error.toString(), '');
     }
   });
 
   
-  test('Create an update listener on the store', () async {
+  test('Create an update listener on the db', () async {
     try {
       final events = [];
-      final blocker = client.createListener(store);
+      final blocker = client.createListener(dbID);
       final stream = blocker.listen((result){
-        final person = Person.fromJson(result.entity);
+        final person = Person.fromJson(result.instance);
         events.add(person.age);
       });
 
       final ages = [22, 23];
       for (var i=0; i<ages.length; i++) {
-        final model = createPerson(ID: modelID, age: ages[i]);
-        await client.modelSave(store, 'Person', [model.toJson()]);
+        final model = createPerson(ID: collectionID, age: ages[i]);
+        await client.save(dbID, 'Person', [model.toJson()]);
       };
       // @todo: fix. sdoesn't work on CI
       // expect(events.length, ages.length);

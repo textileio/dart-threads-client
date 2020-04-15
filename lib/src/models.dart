@@ -1,55 +1,160 @@
 
+import 'dart:convert';
 import 'dart:ffi';
+import 'dart:math';
+import 'dart:typed_data';
+import 'package:threads_client_grpc/api.pbgrpc.dart';
+import 'package:threads_client_grpc/api.pb.dart';
 
-class StoreLinks {
-  final List<String> addresses;
-  final String followKey;
-  final String readKey;
-  StoreLinks._(this.addresses, this.followKey, this.readKey);
-  factory StoreLinks(List<String> addresses, String followKey, String readKey) {
-    return StoreLinks._(addresses, followKey, readKey);
+/// A collection object
+/// {@category Data Types}
+class Collection {
+  /// The name of the collection
+  final String name;
+  /// The JSON string of the schema
+  final String schema;
+  Collection._(this.name, this.schema);
+  factory Collection(String name, String schema) {
+    return Collection._(name, schema);
   }
-  StoreLinks.fromJson(Map<String, dynamic> values)
+  /// The JSON encoded Collection object
+  Collection.fromJson(Map<String, dynamic> values)
+    : name = values['name'],
+      schema = values['schema'];
+
+  /// Create Collection object from JSON
+  Map<String, dynamic> toJson() =>
+    Map<String, dynamic>.from({
+      'name': name,
+      'schema': schema
+    });
+  // Internal method
+  CollectionConfig getConfig() {
+    final config = CollectionConfig();
+    config.name = name;
+    config.schema = utf8.encode(schema);
+    return config;
+  }
+}
+
+/// DB Info containing available addresses and keys
+/// {@category Data Types}
+class Info {
+  final List<String> addresses;
+  final String key;
+  Info._(this.addresses, this.key);
+  factory Info(List<String> addresses, String key) {
+    return Info._(addresses, key);
+  }
+  Info.fromJson(Map<String, dynamic> values)
     : addresses = List<String>.from(values['addresses']),
-      followKey = values['followKey'],
-      readKey = values['readKey'];
+      key = values['key'];
 
   Map<String, dynamic> toJson() =>
     Map<String, dynamic>.from({
       'addresses': addresses,
-      'followKey': followKey,
-      'readKey': readKey
+      'key': key
     });
+
+  Uint8List decodeKey() {
+    return base64.decode(key);
+  }
 }
 
+/// A new result from a Thread update listener
+/// {@category Data Types}
 class ListenResult {
-  String modelName;
-  String entityID;
+  /// The name of the collection updated
+  String collectionName;
+  /// The name of the instanceID updated
+  String instanceID;
+  /// The update action name
   String action;
-  Map<String, dynamic> entity;
-  ListenResult(this.modelName, this.entityID, this.action, this.entity);
+  /// The new value of the instance if any
+  Map<String, dynamic> instance;
+  /// Internal method
+  ListenResult(this.collectionName, this.instanceID, this.action, this.instance);
+  /// Internal method
   ListenResult.fromJson(Map<String, dynamic> values)
-    : modelName = values['modelName'],
-      entityID = values['entityID'],
+    : collectionName = values['collectionName'],
+      instanceID = values['instanceID'],
       action = values['action'],
-      entity = Map<String, dynamic>.from(values['entity']);
-
+      instance = Map<String, dynamic>.from(values['instance']);
+  /// Convert the result object to JSON
   Map<String, dynamic> toJson() =>
     Map<String, dynamic>.from({
-      'modelName': modelName,
-      'entityID': entityID,
+      'collectionName': collectionName,
+      'instanceID': instanceID,
       'action': action,
-      'entity': entity
+      'instance': instance
     });
 }
 
-class JSONValue {
+/// Define a Thread query using JSON (fromJson)
+/// {@category Data Types}
+class Query {
+  List<_QueryCriterion> ands;
+  List<Query> ors;
+  _QuerySort sort;
+  Query({this.ands, this.ors, this.sort});
+
+  /// Initialize a Query object from a JSON object
+  Query.fromJson(Map<String, dynamic> query)
+    : ands = query.containsKey('ands') ? _createJSONCriterionList(query['ands']): null,
+      ors = query.containsKey('ors') ? _createJSONQueryList(query['ors']): null,
+      sort = query.containsKey('sort') ? _QuerySort.fromJson(query['sort']): null;
+
+  /// Get JSON back out of your Auery object
+  Map<String, dynamic> toJson() {
+    final result = Map<String, dynamic>.from({});
+    if (ands != null) {
+      result['ands'] = List<Map<String, dynamic>>.from(ands.map((an) => an.toJson()));
+    }
+    if (ors != null) {
+      result['ors'] = List<Map<String, dynamic>>.from(ors.map((or) => or.toJson()));
+    }
+    if (sort != null) {
+      result['sort'] = sort.toJson();
+    }
+    return Map<String, dynamic>.from(result);
+  }
+}
+
+/// ThreadID represents a self-describing Thread identifier.
+/// It is formed by a version, a variant, and a random number of a given length.
+/// {@category Data Types}
+class ThreadID {
+  List<int> _bytes;
+  ThreadID(List<int> _bytes);
+  
+  /// fromRandom creates a new random ID object.
+  /// variant is the Thread variant to use. @see Variant
+  /// size is the size of the random component to use. Defaults to 32 bytes.
+  ThreadID.fromRandom({int version = 0x01, int variant = 0x55, int size = 32}) {
+    // two 8 bytes (max) numbers plus random bytes
+    final bytes = [version, variant];
+    bytes.addAll(List<int>.generate(size, (i) => Random().nextInt(256)));
+    _bytes = bytes;
+  }
+
+  /// toBytes returns the byte representation of an ID.
+  List<int> toBytes() {
+    return _bytes;
+  }
+
+  /// toString returns the (multibase encoded) string representation of an ID.
+  String toString() {
+    return base64.encode(_bytes);
+  }
+}
+
+class _QueryValue {
   String string;
   bool boolean;
   Float number;
-  JSONValue({this.string, this.boolean, this.number});
+  _QueryValue({this.string, this.boolean, this.number});
 
-  JSONValue.fromJson(Map<String, dynamic> values)
+  _QueryValue.fromJson(Map<String, dynamic> values)
     : string = values.containsKey('string') ? values['string'] as String : null,
       boolean = values.containsKey('boolean') ? values['boolean'] as bool : null,
       number = values.containsKey('number') ? values['number'] as Float : null;
@@ -69,11 +174,11 @@ class JSONValue {
   }
 }
 
-class JSONSort {
+class _QuerySort {
   String fieldPath;
   bool desc;
-  JSONSort(this.fieldPath, this.desc);
-  JSONSort.fromJson(Map<String, dynamic> settings)
+  _QuerySort(this.fieldPath, this.desc);
+  _QuerySort.fromJson(Map<String, dynamic> settings)
     : fieldPath = settings['fieldPath'] as String,
       desc = settings['desc'] as bool;
   Map<String, dynamic> toJson() =>
@@ -84,7 +189,7 @@ class JSONSort {
 }
 
 // @todo: probably should just be an enum
-int convertOperation (String op) {
+int _convertOperation (String op) {
   switch (op.toLowerCase()) {
     case 'eq':
       return 0;
@@ -103,18 +208,18 @@ int convertOperation (String op) {
   }
 }
 
-class JSONCriterion {
+class _QueryCriterion {
   String fieldPath;
   int operation;
-  JSONValue value;
-  JSONQuery query;
-  JSONCriterion({this.fieldPath, this.operation, this.value, this.query});
+  _QueryValue value;
+  Query query;
+  _QueryCriterion({this.fieldPath, this.operation, this.value, this.query});
 
-  JSONCriterion.fromJson(Map<String, dynamic> criterion)
+  _QueryCriterion.fromJson(Map<String, dynamic> criterion)
     : fieldPath = criterion.containsKey('fieldPath') ? criterion['fieldPath'] as String : null,
-      operation = criterion.containsKey('operation') ? convertOperation(criterion['operation'] as String) : null,
-      value = criterion.containsKey('value') ? JSONValue.fromJson(criterion['value']) : null,
-      query = criterion.containsKey('query') ? JSONQuery.fromJson(criterion['query']) : null;
+      operation = criterion.containsKey('operation') ? _convertOperation(criterion['operation'] as String) : null,
+      value = criterion.containsKey('value') ? _QueryValue.fromJson(criterion['value']) : null,
+      query = criterion.containsKey('query') ? Query.fromJson(criterion['query']) : null;
   Map<String, dynamic> toJson() {
     final result = {
       'fieldPath': fieldPath,
@@ -131,48 +236,22 @@ class JSONCriterion {
     
 }
 
-List<JSONCriterion> createJSONCriterionList (List<dynamic> input) {
+List<_QueryCriterion> _createJSONCriterionList (List<dynamic> input) {
   final results = [];
   for (var i=0; i<input.length; i++) {
     results.add(
-      JSONCriterion.fromJson(Map<String, dynamic>.from(input[i]))
+      _QueryCriterion.fromJson(Map<String, dynamic>.from(input[i]))
     );
   }
-  return List<JSONCriterion>.from(results);
+  return List<_QueryCriterion>.from(results);
 }
 
-List<JSONQuery> createJSONQueryList (List<dynamic> input) {
+List<Query> _createJSONQueryList (List<dynamic> input) {
   final results = [];
   for (var i=0; i<input.length; i++) {
     results.add(
-      JSONQuery.fromJson(Map<String, dynamic>.from(input[i]))
+      Query.fromJson(Map<String, dynamic>.from(input[i]))
     );
   }
-  return List<JSONQuery>.from(results);
-}
-
-class JSONQuery {
-  List<JSONCriterion> ands;
-  List<JSONQuery> ors;
-  JSONSort sort;
-  JSONQuery({this.ands, this.ors, this.sort});
-
-  JSONQuery.fromJson(Map<String, dynamic> query)
-    : ands = query.containsKey('ands') ? createJSONCriterionList(query['ands']): null,
-      ors = query.containsKey('ors') ? createJSONQueryList(query['ors']): null,
-      sort = query.containsKey('sort') ? JSONSort.fromJson(query['sort']): null;
-
-  Map<String, dynamic> toJson() {
-    final result = Map<String, dynamic>.from({});
-    if (ands != null) {
-      result['ands'] = List<Map<String, dynamic>>.from(ands.map((an) => an.toJson()));
-    }
-    if (ors != null) {
-      result['ors'] = List<Map<String, dynamic>>.from(ors.map((or) => or.toJson()));
-    }
-    if (sort != null) {
-      result['sort'] = sort.toJson();
-    }
-    return Map<String, dynamic>.from(result);
-  }
+  return List<Query>.from(results);
 }

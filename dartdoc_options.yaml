@@ -1,0 +1,10 @@
+dartdoc:
+  linkTo:
+    url: "https://textileio.github.io/dart-threads-client/%v%"
+  showUndocumentedCategories: true
+  ignore:
+    - ambiguous-doc-reference
+  errors:
+    - unresolved-doc-reference
+  warnings:
+    - tool-error

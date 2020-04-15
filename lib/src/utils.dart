@@ -7,10 +7,10 @@ import 'package:threads_client_grpc/api.pb.dart';
 
 void handleListenData(ListenReply data, EventSink<ListenResult> sink) {
   final result = ListenResult.fromJson({
-    'modelName': data.modelName,
-    'entityID': data.entityID,
+    'collectionName': data.collectionName,
+    'instanceID': data.instanceID,
     'action': data.action.name,
-    'entity': JsonCodec().decode(utf8.decode(data.entity))
+    'instance': JsonCodec().decode(utf8.decode(data.instance))
   });
   sink.add(result);
 }
@@ -19,16 +19,16 @@ dynamic returnReadTransform() {
   return (GeneratedMessage data, EventSink<ReadTransactionRequest> sink) {
     final request = ReadTransactionRequest();
     switch (data.runtimeType) {
-      case ModelFindByIDRequest:
-        request.modelFindByIDRequest = data as ModelFindByIDRequest;
+      case FindByIDRequest:
+        request.findByIDRequest = data as FindByIDRequest;
         sink.add(request);
         break;
-      case ModelFindRequest:
-        request.modelFindRequest = data as ModelFindRequest;
+      case FindRequest:
+        request.findRequest = data as FindRequest;
         sink.add(request);
         break;
-      case ModelHasRequest:
-        request.modelHasRequest = data as ModelHasRequest;
+      case HasRequest:
+        request.hasRequest = data as HasRequest;
         sink.add(request);
         break;
     }
@@ -39,28 +39,28 @@ dynamic returnWriteTransform() {
   return (GeneratedMessage data, EventSink<WriteTransactionRequest> sink) {
     final request = WriteTransactionRequest();
     switch (data.runtimeType) {
-      case ModelFindByIDRequest:
-        request.modelFindByIDRequest = data as ModelFindByIDRequest;
+      case FindByIDRequest:
+        request.findByIDRequest = data as FindByIDRequest;
         sink.add(request);
         break;
-      case ModelFindRequest:
-        request.modelFindRequest = data as ModelFindRequest;
+      case FindRequest:
+        request.findRequest = data as FindRequest;
         sink.add(request);
         break;
-      case ModelHasRequest:
-        request.modelHasRequest = data as ModelHasRequest;
+      case HasRequest:
+        request.hasRequest = data as HasRequest;
         sink.add(request);
         break;
-      case ModelCreateRequest:
-        request.modelCreateRequest = data as ModelCreateRequest;
+      case CreateRequest:
+        request.createRequest = data as CreateRequest;
         sink.add(request);
         break;
-      case ModelDeleteRequest:
-        request.modelDeleteRequest = data as ModelDeleteRequest;
+      case DeleteRequest:
+        request.deleteRequest = data as DeleteRequest;
         sink.add(request);
         break;
-      case ModelSaveRequest:
-        request.modelSaveRequest = data as ModelSaveRequest;
+      case SaveRequest:
+        request.saveRequest = data as SaveRequest;
         sink.add(request);
         break;
     }
