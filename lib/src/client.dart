@@ -13,7 +13,7 @@ import 'utils.dart';
 /// API Client to the remote Thread daemon
 /// {@category API}
 /// 
-/// {@example examples/helloworld.dart}
+/// {@example example/helloworld.dart}
 class Client {
   APIClient _stub;
   ClientChannel _channel;
@@ -41,7 +41,7 @@ class Client {
 
   /// Create a new DB with provided Credentials
   /// 
-  /// {@example examples/helloworld.dart}
+  /// {@example example/helloworld.dart}
   Future<void> newDB(String dbID) async {
     final request = NewDBRequest();
     request.dbID = base64.decode(dbID);
@@ -87,7 +87,7 @@ class Client {
 
   /// Create a new instance(s) in the collection
   /// 
-  /// {@example examples/create.dart}
+  /// {@example example/create.dart}
   Future<List<String>> create(String dbID, String collectionName, List<Map<String, dynamic>> values) async {
     final request = CreateRequest();  
     request.dbID = base64.decode(dbID);

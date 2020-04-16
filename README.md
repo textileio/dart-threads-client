@@ -127,7 +127,7 @@ dart test/threads_client_test.dart
 ### Run example
 
 ```sh
-dart examples/helloworld.dart
+dart example/helloworld.dart
 ```
 
 ## Contributing
