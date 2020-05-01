@@ -112,8 +112,9 @@
   request.collectionName = collectionName;
   request.queryJSON = utf8.encode(json.encode(query.toJson()));
   final response = await _stub.find(request);
+  final jsonList = response.instances.map((et) =&gt; json.decode(utf8.decode(et)));
   return List&lt;Map&lt;String, dynamic&gt;&gt;.from(
-    response.instances.map((et) =&gt; json.decode(utf8.decode(et)))
+    jsonList
   );
 }</code></pre>
     </section>
