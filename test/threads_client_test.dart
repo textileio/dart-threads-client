@@ -9,9 +9,9 @@ const personSchema = {
   '\$schema': 'http://json-schema.org/draft-07/schema#',
   'title': 'Person',
   'type': 'object',
-  'required': ['ID'],
+  'required': ['_id'],
   'properties': {
-    'ID': {
+    '_id': {
       'type': 'string',
       'description': 'The instance\'s id.',
     },
@@ -82,7 +82,7 @@ void main() async {
     }
   });
   test('Update an existing model in the db', () async {
-    final model = createPerson(ID: collectionID, age: newAge);
+    final model = createPerson(id: collectionID, age: newAge);
     try {
       await client.save(dbID, 'Person', [model.toJson()]);
       expect(true, true);
@@ -158,7 +158,7 @@ void main() async {
 
       final ages = [22, 23];
       for (var i=0; i<ages.length; i++) {
-        final model = createPerson(ID: collectionID, age: ages[i]);
+        final model = createPerson(id: collectionID, age: ages[i]);
         await client.save(dbID, 'Person', [model.toJson()]);
       };
       // @todo: fix. sdoesn't work on CI
@@ -225,14 +225,14 @@ void main() async {
 }
 
 class Person {
-  final String ID;
+  final String id;
   final String firstName;
   final String lastName;
   final int age;
   final bool biker;
-  Person(this.ID, this.firstName, this.lastName, this.age, this.biker);
+  Person(this.id, this.firstName, this.lastName, this.age, this.biker);
   Person.fromJson(Map<String, dynamic> json)
-      : ID = json['ID'],
+      : id = json['_id'],
         firstName = json['firstName'],
         lastName = json['lastName'],
         age = json['age'],
@@ -240,7 +240,7 @@ class Person {
 
   Map<String, dynamic> toJson() =>
     {
-      'ID': ID,
+      '_id': id,
       'firstName': firstName,
       'lastName': lastName,
       'age': age,
@@ -248,6 +248,6 @@ class Person {
     };
 }
 
-Person createPerson ({String ID = '', int age = 24, bool biker = true}) {
-  return Person(ID, 'Adam', 'Doe', age, biker);
+Person createPerson ({String id = '', int age = 24, bool biker = true}) {
+  return Person(id, 'Adam', 'Doe', age, biker);
 }

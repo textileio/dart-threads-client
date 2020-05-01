@@ -8,7 +8,7 @@ environment:
   sdk: '>=2.2.0 <3.0.0'
 
 dependencies:
-  threads_client_grpc: ^0.1.14
+  threads_client_grpc: ^0.1.15
   async: ^2.2.0
   base32: ^1.1.1
   cryptoutils: ^0.4.0
