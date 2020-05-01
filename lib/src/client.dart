@@ -158,8 +158,9 @@ class Client {
     request.collectionName = collectionName;
     request.queryJSON = utf8.encode(json.encode(query.toJson()));
     final response = await _stub.find(request);
+    final jsonList = response.instances.map((et) => json.decode(utf8.decode(et)));
     return List<Map<String, dynamic>>.from(
-      response.instances.map((et) => json.decode(utf8.decode(et)))
+      jsonList
     );
   }
 

@@ -148,27 +148,27 @@ class ThreadID {
   }
 }
 
-class _QueryValue {
+class _QueryValue { 
   String string;
   bool boolean;
-  Float number;
+  num number;
   _QueryValue({this.string, this.boolean, this.number});
 
   _QueryValue.fromJson(Map<String, dynamic> values)
     : string = values.containsKey('string') ? values['string'] as String : null,
       boolean = values.containsKey('boolean') ? values['boolean'] as bool : null,
-      number = values.containsKey('number') ? values['number'] as Float : null;
+      number = values.containsKey('number') ? values['number'].runtimeType == String ? num.parse(values['number']) : values['number'].toDouble() : null;
 
   Map<String, dynamic> toJson() {
     final result = {};
     if (string != null) {
-      result['string'] = string;
+      result['String'] = string;
     }
     if (boolean != null) {
-      result['boolean'] = boolean;
+      result['Bool'] = boolean;
     }
     if (number != null) {
-      result['number'] = number;
+      result['Float'] = number;
     }
     return Map<String, dynamic>.from(result);
   }

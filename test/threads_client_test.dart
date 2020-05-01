@@ -28,6 +28,10 @@ const personSchema = {
       'type': 'integer',
       'minimum': 0,
     },
+    'biker': {
+      'description': 'Does the person own a bike.',
+      'type': 'boolean',
+    },
   },
 };
 
@@ -164,6 +168,60 @@ void main() async {
       expect(error.toString(), '');
     }
   });
+
+  test('Run a query containing numeric type', () async {
+    try {
+      final queryJSON = threads.Query.fromJson({
+        'ands': [{
+            'fieldPath': 'age',
+            'operation': 'ge',
+            'value': { 'number': 20 }
+          }],
+        'sort': { 'fieldPath': 'firstName', 'desc': true}
+      });
+      expect(queryJSON.ands, isNotEmpty);
+      final res = await client.find(dbID, 'Person', queryJSON);
+      expect(res.length, 1);
+    } catch (error) {
+      expect(error.toString(), '');
+    }
+  });
+
+  test('Run a query using boolean type', () async {
+    try {
+      final queryJSON = threads.Query.fromJson({
+        'ands': [{
+            'fieldPath': 'biker',
+            'operation': 'eq',
+            'value': { 'boolean': true }
+          }],
+        'sort': { 'fieldPath': 'firstName', 'desc': true}
+      });
+      expect(queryJSON.ands, isNotEmpty);
+      final res = await client.find(dbID, 'Person', queryJSON);
+      expect(res.length, 1);
+    } catch (error) {
+      expect(error.toString(), '');
+    }
+  });
+
+  test('Run a query that returns no result', () async {
+    try {
+      final queryJSON = threads.Query.fromJson({
+        'ands': [{
+            'fieldPath': 'biker',
+            'operation': 'eq',
+            'value': { 'boolean': false }
+          }],
+        'sort': { 'fieldPath': 'firstName', 'desc': true}
+      });
+      expect(queryJSON.ands, isNotEmpty);
+      final res = await client.find(dbID, 'Person', queryJSON);
+      expect(res.length, 0);
+    } catch (error) {
+      expect(error.toString(), '');
+    }
+  });
 }
 
 class Person {
@@ -171,22 +229,25 @@ class Person {
   final String firstName;
   final String lastName;
   final int age;
-  Person(this.ID, this.firstName, this.lastName, this.age);
+  final bool biker;
+  Person(this.ID, this.firstName, this.lastName, this.age, this.biker);
   Person.fromJson(Map<String, dynamic> json)
       : ID = json['ID'],
         firstName = json['firstName'],
         lastName = json['lastName'],
-        age = json['age'];
+        age = json['age'],
+        biker = json['biker'];
 
   Map<String, dynamic> toJson() =>
     {
       'ID': ID,
       'firstName': firstName,
       'lastName': lastName,
-      'age': age
+      'age': age,
+      'biker': biker
     };
 }
 
-Person createPerson ({String ID = '', int age = 24}) {
-  return Person(ID, 'Adam', 'Doe', age);
+Person createPerson ({String ID = '', int age = 24, bool biker = true}) {
+  return Person(ID, 'Adam', 'Doe', age, biker);
 }
