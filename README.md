@@ -1,5 +1,7 @@
 # dart-threads-client
 
+> Warning: The dart-threads-client library is temporarily deprecated as remote DB support not currently up-to-date with the [Textile Hub](https://docs.textile.io/hub/introduction/) and so will not work. If you are waiting for Dart support, please [see here](https://github.com/textileio/dart-textile/issues/5).
+
 [![Made by Textile](https://img.shields.io/badge/made%20by-Textile-informational.svg?style=popout-square)](https://textile.io)
 [![Chat on Slack](https://img.shields.io/badge/slack-slack.textile.io-informational.svg?style=popout-square)](https://slack.textile.io)
 [![GitHub license](https://img.shields.io/github/license/textileio/dart-threads-client.svg?style=popout-square)](./LICENSE)
