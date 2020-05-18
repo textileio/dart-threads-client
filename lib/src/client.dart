@@ -69,8 +69,7 @@ class Client {
     request.collections.addAll(
       collections.map((c) => c.getConfig())
     );
-    await _stub.newDBFromAddr(request);
-    return;
+    return await _stub.newDBFromAddr(request);
   }
 
   /// Get the DB's address & key information

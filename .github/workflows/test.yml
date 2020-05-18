@@ -28,6 +28,20 @@ jobs:
         - 5007:5007
         - 6006:6006
         - 6007:6007
+      peer:
+        image: textile/go-threads:latest
+        env:
+          THRDS_HOSTADDR: /ip4/0.0.0.0/tcp/4007
+          THRDS_SERVICEAPIADDR: /ip4/0.0.0.0/tcp/5008
+          THRDS_SERVICEAPIPROXYADDR: /ip4/0.0.0.0/tcp/5009
+          THRDS_APIADDR: /ip4/0.0.0.0/tcp/6008
+          THRDS_APIPROXYADDR: /ip4/0.0.0.0/tcp/6009
+        ports:
+        - 4007:4007
+        - 5008:5008
+        - 5009:5009
+        - 6008:6008
+        - 6009:6009
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies
@@ -41,3 +55,5 @@ jobs:
       env:
         THREADS_HOST: threads
         THREADS_PORT: ${{ job.services.threads.ports[6006] }}
+        PEER_HOST: peer
+        PEER_PORT: ${{ job.services.peer.ports[6008] }}

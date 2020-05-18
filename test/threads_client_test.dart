@@ -37,6 +37,7 @@ const personSchema = {
 
 void main() async {
   threads.Client client;
+  threads.Client peer;
   final threadId = threads.ThreadID.fromRandom();
   final dbID = threadId.toString();
   final env = Platform.environment;
@@ -52,10 +53,18 @@ void main() async {
 
     // Create a new threads client
     client = threads.Client(config: config);
+    
+    final peerConfig = threads.Config(
+      host: env.containsKey('PEER_HOST') && env['PEER_HOST'] != '' ? env['PEER_HOST'] : '127.0.0.1',
+      port: env.containsKey('PEER_PORT') && env['PEER_PORT'] != '' ? int.parse(env['PEER_PORT']) : 6008
+    );
+
+    peer = threads.Client(config: peerConfig);
   });
   tearDownAll(() async {
     // Shutdown the threads client.
     await client.shutdown();
+    await peer.shutdown();
   });
   test('Create new DB', () async {
     await client.newDB(dbID);
@@ -66,9 +75,26 @@ void main() async {
     await client.newCollection(dbID: dbID, name: 'Person', schema: jsonString);
     expect(true, true);
   });
-  test('Get a link to invite others to the db', () async {
+    test('Get a link to invite others to the db', () async {
     final link = await client.getDBInfo(dbID);
+
     expect(link.addresses.length, greaterThan(0));
+
+    final jsonData = JsonCodec().encode(personSchema);
+    final jsonString = jsonData.toString();
+    final collection = threads.Collection('Person', jsonString);
+    final addrs = link.addresses;
+    var success = false;
+    while (addrs.isNotEmpty && !success) {
+      try {
+        final addr = addrs.removeLast();
+        await peer.newDBFromAddr(address: addr, key: link.key, collections: [collection]);
+        success = true;
+      } catch (error) {
+        print('peer not found. ${addrs.length} more tries.');
+      }
+    }
+    expect(success, true);
   });
   test('Create a new model in the db', () async {
     final model = createPerson();
@@ -146,7 +172,29 @@ void main() async {
     }
   });
 
-  
+  test('Get values in peer db', () async {
+    final queryJSON = threads.Query.fromJson({
+      'ands': [{
+          'fieldPath': 'firstName',
+          'operation': 'Eq',
+          'value': { 'string': 'Adam' }
+        }],
+      'ors': [{
+        'ands': [{
+          'fieldPath': 'firstName',
+          'operation': 'Eq',
+          'value': { 'string': 'Doe' }
+        }]
+      }],
+      'sort': { 'fieldPath': 'firstName', 'desc': true}
+    });
+    expect(queryJSON.ands, isNotEmpty);
+    final response = await peer.find(dbID, 'Person', queryJSON);
+
+    expect(response.length, 1);
+    final person = Person.fromJson(response.first);
+    expect(person.age, 42);
+  });
   test('Create an update listener on the db', () async {
     try {
       final events = [];
